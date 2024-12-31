@@ -1,0 +1,115 @@
+Gramine is starting. Parsing TOML manifest file, this may take some time...
+-----------------------------------------------------------------------------------------------------------------------
+Gramine detected the following insecure configurations:
+
+  - sgx.debug = true                           (this is a debug enclave)
+  - loader.insecure__use_cmdline_argv = true   (forwarding command-line args from untrusted host to the app)
+  - loader.insecure__use_host_env = true       (forwarding environment vars from untrusted host to the app)
+  - sgx.allowed_files = [ ... ]                (some files are passed through from untrusted host without verification)
+
+Gramine will continue application execution, but this configuration must not be used in production!
+-----------------------------------------------------------------------------------------------------------------------
+
+Error: Environment variable KII_PLAYER_NUMBER not found.
+Entered the CRG main function.
+
+GENERATED SEED ------- :0b52b5f8b2602793
+Getting environment variables ...kii_job_id_defined: 1920bb26-dsee-dzfw-vdsdsa14fds4
+Player 0 endpoint: 127.0.0.1:1026Player 1 endpoint: 127.0.0.1:1025ok
+Local attestation starts . . .Inside local attestation function
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+Hello  . Bind on https://localhost:4433/ ... ok
+  . Setting up the SSL data.... ok
+  . Waiting for a remote connection ...Gramine is starting. Parsing TOML manifest file, this may take some time...
+-----------------------------------------------------------------------------------------------------------------------
+Gramine detected the following insecure configurations:
+
+  - sgx.debug = true                           (this is a debug enclave)
+  - loader.insecure__use_cmdline_argv = true   (forwarding command-line args from untrusted host to the app)
+  - loader.insecure__use_host_env = true       (forwarding environment vars from untrusted host to the app)
+  - sgx.allowed_files = [ ... ]                (some files are passed through from untrusted host without verification)
+
+Gramine will continue application execution, but this configuration must not be used in production!
+-----------------------------------------------------------------------------------------------------------------------
+
+Error: Environment variable KII_PLAYER_NUMBER not found.
+Entered the CRG main function.
+
+GENERATED SEED ------- :30799cbae5da4399
+Getting environment variables ...kii_job_id_defined: 1920bb26-dsee-dzfw-vdsdsa14fds4
+Player 0 endpoint: 127.0.0.1:1026Player 1 endpoint: 127.0.0.1:1025ok
+Local attestation starts . . .Inside local attestation function
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+Hello  . Bind on https://localhost:4433/ ...error: Host injected malicious signal 2
+Gramine is starting. Parsing TOML manifest file, this may take some time...
+-----------------------------------------------------------------------------------------------------------------------
+Gramine detected the following insecure configurations:
+
+  - sgx.debug = true                           (this is a debug enclave)
+  - loader.insecure__use_cmdline_argv = true   (forwarding command-line args from untrusted host to the app)
+  - loader.insecure__use_host_env = true       (forwarding environment vars from untrusted host to the app)
+  - sgx.allowed_files = [ ... ]                (some files are passed through from untrusted host without verification)
+
+Gramine will continue application execution, but this configuration must not be used in production!
+-----------------------------------------------------------------------------------------------------------------------
+
+Error: Environment variable KII_PLAYER_NUMBER not found.
+Entered the CRG main function.
+
+GENERATED SEED ------- :374be634bcca6c4f
+Getting environment variables ...kii_job_id_defined: 1920bb26-dsee-dzfw-vdsdsa14fds4
+Player 0 endpoint: 127.0.0.1:1026Player 1 endpoint: 127.0.0.1:1025ok
+Local attestation starts . . .Inside local attestation function
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+Hello  . Bind on https://localhost:4433/ ... ok
+  . Setting up the SSL data.... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake...ssl_msg.c:4861: mbedtls_ssl_fetch_input() returned -29312 (-0x7280)
+
+ssl_msg.c:4220: ssl_get_next_record() returned -29312 (-0x7280)
+
+ssl_tls13_generic.c:0057: mbedtls_ssl_read_record() returned -29312 (-0x7280)
+
+ssl_tls13_server.c:3465: ssl_tls13_process_client_hello() returned -29312 (-0x7280)
+
+error: Host injected malicious signal 2
+Gramine is starting. Parsing TOML manifest file, this may take some time...
+-----------------------------------------------------------------------------------------------------------------------
+Gramine detected the following insecure configurations:
+
+  - sgx.debug = true                           (this is a debug enclave)
+  - loader.insecure__use_cmdline_argv = true   (forwarding command-line args from untrusted host to the app)
+  - loader.insecure__use_host_env = true       (forwarding environment vars from untrusted host to the app)
+  - sgx.allowed_files = [ ... ]                (some files are passed through from untrusted host without verification)
+
+Gramine will continue application execution, but this configuration must not be used in production!
+-----------------------------------------------------------------------------------------------------------------------
+
+Error: Environment variable KII_PLAYER_NUMBER not found.
+Entered the CRG main function.
+
+GENERATED SEED ------- :d8131c65af0c9a84
+Getting environment variables ...kii_job_id_defined: 1920bb26-dsee-dzfw-vdsdsa14fds4
+Player 0 endpoint: 127.0.0.1:1026Player 1 endpoint: 127.0.0.1:1025ok
+Local attestation starts . . .Inside local attestation function
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+Hello  . Bind on https://localhost:4433/ ... ok
+  . Setting up the SSL data.... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake...ssl_msg.c:4861: mbedtls_ssl_fetch_input() returned -29312 (-0x7280)
+
+ssl_msg.c:4220: ssl_get_next_record() returned -29312 (-0x7280)
+
+ssl_tls13_generic.c:0057: mbedtls_ssl_read_record() returned -29312 (-0x7280)
+
+ssl_tls13_server.c:3465: ssl_tls13_process_client_hello() returned -29312 (-0x7280)
+
+error: Host injected malicious signal 2

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "secretsharing.pb-c.h": "c",
+        "stdbool.h": "c",
+        "dlfcn.h": "c",
+        "protobuf-c.h": "c",
+        "stdio.h": "c",
+        "vars.h": "c"
+    }
+}

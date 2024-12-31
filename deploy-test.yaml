@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramine-deployment
+  labels:
+    app: gramine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gramine
+  template:
+    metadata:
+      labels:
+        app: gramine
+    spec:
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
+      containers:
+      - name: gramine
+        image: sarthaksharm/tee-crg:latest
+        imagePullPolicy: Always
+        command: [ "/bin/bash", "-c", "gramine-sgx kii-run && sleep infinity" ]
+        args: [ "while true; do sleep 30; done;" ]
+        resources:
+          limits:
+            sgx.intel.com/epc: "512Mi"
+        volumeMounts:
+        - name: var-run-aesmd
+          mountPath: /var/run/aesmd
+      restartPolicy: "Always"
+      volumes:
+      - name: var-run-aesmd
+        hostPath:
+          path: /var/run/aesmd

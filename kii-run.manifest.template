@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: BSD-3-Clause
+
+# Manifest for kii-run SGX application
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "/kii-run"
+loader.log_level = "{{ log_level }}"
+
+loader.env.LD_LIBRARY_PATH = "/lib:/lib2:/usr/local/lib"
+loader.env.LC_ALL = "C"
+loader.insecure__use_cmdline_argv = true
+loader.insecure__use_host_env = true
+
+fs.mounts = [
+  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "/kii-run", uri = "file:kii-run" },
+  { path = "/Player-Data/", uri="file:Player-Data/"},
+  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0", key_name = "_sgx_mrenclave"},
+  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1", key_name = "_sgx_mrenclave"},
+#  { path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0"},
+#  { path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1"},
+  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P0", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P0", key_name = "_sgx_mrenclave"},
+  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P1", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P1", key_name = "_sgx_mrenclave"},
+  { path = "/etc/kii", uri="file:etc/kii/" },
+  { path = "/lib2/libc.so.6", uri="file:/lib/x86_64-linux-gnu/libc.so.6"},
+  { path = "/lib2/libcrypto.so.3", uri="file:/lib/x86_64-linux-gnu/libcrypto.so.3"},
+  { path = "/lib2/libgcc_s.so.1", uri="file:/lib/x86_64-linux-gnu/libgcc_s.so.1"},
+  { path = "/lib2/libsodium.so.23", uri="file:/lib/x86_64-linux-gnu/libsodium.so.23"},
+  { path = "/lib2/libssl.so.3", uri="file:/lib/x86_64-linux-gnu/libssl.so.3"},
+  { path = "/lib2/libstdc++.so.6", uri="file:/lib/x86_64-linux-gnu/libstdc++.so.6"},
+  { path = "/Fake-Offline.x", uri="file:Fake-Offline.x"},
+  { path = "/usr/local/lib", uri="file:/usr/local/lib/"}
+]
+
+sgx.debug = true
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+# If your application needs to load other files or libraries, list them here
+sgx.trusted_files = [
+  "file:kii-run",
+  "file:{{ gramine.libos }}",
+  "file:Fake-Offline.x",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:./etc/kii/",
+  "file:/home/azureuser/mp-spdz-5350e66/",
+  "file:/usr/local/lib/",
+  "file:/lib/x86_64-linux-gnu/libc.so.6",
+  "file:/lib/x86_64-linux-gnu/libcrypto.so.3",
+  "file:/lib/x86_64-linux-gnu/libgcc_s.so.1",
+  "file:/lib/x86_64-linux-gnu/libsodium.so.23",
+  "file:/lib/x86_64-linux-gnu/libssl.so.3",
+  "file:/lib/x86_64-linux-gnu/libstdc++.so.6",
+]
+
+# Files that your program will access
+sgx.allowed_files = [
+    "file:./Player-Data",
+    "file:./etc/kii",
+    "file:/lib/x86_64-linux-gnu",
+]
+
