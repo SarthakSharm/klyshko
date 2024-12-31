@@ -18,19 +18,18 @@ RA_TYPE ?= none
 RA_CLIENT_SPID ?=
 RA_CLIENT_LINKABLE ?= 0
 
-# Object files for the client and server
-# OBJS_CLIENT = src3/CRG.c src3/client.c src3/server.c src3/secretsharing.pb-c.c
-# OBJS_SERVER = src3/CRG.c src3/client.c src3/server.c src3/secretsharing.pb-c.c
-
 
 ## local attestation only
-OBJS_CLIENT = test2/KII.c test2/secretsharing.pb-c.c 
-OBJS_SERVER = test2/local_attestation.c test2/secretsharing.pb-c.c  test2/CRG.c
+# OBJS_CLIENT = test2/KII.c test2/secretsharing.pb-c.c 
+# OBJS_SERVER = test2/local_attestation.c test2/secretsharing.pb-c.c  test2/CRG.c
 
-## remote attestation + local attestation 
+## local+remote attestation 2 players
 # OBJS_CLIENT = test3/KII.c test3/secretsharing.pb-c.c 
 # OBJS_SERVER = test3/CRG.c test3/client.c test3/server.c test3/secretsharing.pb-c.c test3/local_attestation.c
 
+## multiple player (>2) remote+local attestation 
+OBJS_CLIENT = multiple_tee/KII.c multiple_tee/secretsharing.pb-c.c 
+OBJS_SERVER = multiple_tee/CRG.c multiple_tee/client.c multiple_tee/server.c multiple_tee/secretsharing.pb-c.c multiple_tee/local_attestation.c
 
 .PHONY: all
 all: app epid

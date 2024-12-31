@@ -1,0 +1,6 @@
+# Base image
+FROM ghcr.io/carbynestack/spdz:5350e66
+
+WORKDIR /kii
+
+COPY /test2/* /kii

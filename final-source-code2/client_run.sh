@@ -58,13 +58,6 @@ export RA_TLS_MRENCLAVE="$mr_enclave"
 export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
-rm -r Player-Data
-mkdir Player-Data
-cd Player-Data
-mkdir 2-2-40
-mkdir 2-p-128
-cd ..
-
 # Loop through each player in reverse order
 for (( i = KII_PLAYER_COUNT - 1; i >= 0; i-- )); do
     echo "Starting server for player $i in the background (logging to player_${i}.log)..."
@@ -79,9 +72,9 @@ for (( i = KII_PLAYER_COUNT - 1; i >= 0; i-- )); do
         echo "Starting player $i with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${i}.log"
         
         # Run the compiled executable for each player
-       # gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${i}.log" 2>&1 &
-       ./KII "$mr_enclave" "$mr_signer" 0 0 $i >> "kii_${i}.log" 2>&1 &
-        gramine-sgx ./server >> "player_${i}.log" 2>&1 &
+        gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${i}.log" 2>&1 &
+
+        ./KII "$mr_enclave" "$mr_signer" 0 0 $i >> "kii_${i}.log" 2>&1 &
         echo "Player $i session complete." >> "player_${i}.log"
     ) &
 done

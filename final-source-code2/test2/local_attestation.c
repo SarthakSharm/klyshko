@@ -1,25 +1,30 @@
 #include "vars.h"
 #define QUOTE_PATH "/dev/attestation/quote"
 
-static void my_debug(void* ctx, int level, const char* file, int line, const char* str) {
+static void my_debug(void *ctx, int level, const char *file, int line, const char *str)
+{
     ((void)level);
 
-    mbedtls_fprintf((FILE*)ctx, "%s:%04d: %s\n", file, line, str);
-    fflush((FILE*)ctx);
+    mbedtls_fprintf((FILE *)ctx, "%s:%04d: %s\n", file, line, str);
+    fflush((FILE *)ctx);
 }
-void print_hex(const unsigned char *data, size_t len) {
-    for (size_t i = 0; i < len; i++) {
+void print_hex(const unsigned char *data, size_t len)
+{
+    for (size_t i = 0; i < len; i++)
+    {
         printf("%02x", data[i]);
     }
     printf("\n");
 }
-static ssize_t file_read(const char* path, char* buf, size_t count) {
-    FILE* f = fopen(path, "r");
+static ssize_t file_read(const char *path, char *buf, size_t count)
+{
+    FILE *f = fopen(path, "r");
     if (!f)
         return -errno;
 
     ssize_t bytes = fread(buf, 1, count, f);
-    if (bytes <= 0) {
+    if (bytes <= 0)
+    {
         int errsv = errno;
         fclose(f);
         return -errsv;
@@ -32,22 +37,23 @@ static ssize_t file_read(const char* path, char* buf, size_t count) {
     return bytes;
 }
 
-int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
+int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
+{
     printf("Inside local attestation function\n");
     int ret;
     size_t len;
     mbedtls_net_context listen_fd;
     mbedtls_net_context client_fd;
     unsigned char buf[1024];
-    const char* pers = "ssl_server";
-    char* error;
+    const char *pers = "ssl_server";
+    char *error;
 
-    void* ra_tls_attest_lib;
-    int (*ra_tls_create_key_and_crt_der_f)(uint8_t** der_key, size_t* der_key_size,
-                                           uint8_t** der_crt, size_t* der_crt_size);
+    void *ra_tls_attest_lib;
+    int (*ra_tls_create_key_and_crt_der_f)(uint8_t **der_key, size_t *der_key_size,
+                                           uint8_t **der_crt, size_t *der_crt_size);
 
-    uint8_t* der_key = NULL;
-    uint8_t* der_crt = NULL;
+    uint8_t *der_key = NULL;
+    uint8_t *der_crt = NULL;
 
     mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
@@ -76,30 +82,38 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     char attestation_type_str[32] = {0};
     ret = file_read("/dev/attestation/attestation_type", attestation_type_str,
                     sizeof(attestation_type_str) - 1);
-    if (ret < 0 && ret != -ENOENT) {
+    if (ret < 0 && ret != -ENOENT)
+    {
         mbedtls_printf(
             "User requested RA-TLS attestation but cannot read SGX-specific file "
             "/dev/attestation/attestation_type\n");
         return 1;
     }
 
-    if (ret == -ENOENT || !strcmp(attestation_type_str, "none")) {
-        ra_tls_attest_lib               = NULL;
+    if (ret == -ENOENT || !strcmp(attestation_type_str, "none"))
+    {
+        ra_tls_attest_lib = NULL;
         ra_tls_create_key_and_crt_der_f = NULL;
-    } else if (!strcmp(attestation_type_str, "dcap")) {
+    }
+    else if (!strcmp(attestation_type_str, "dcap"))
+    {
         ra_tls_attest_lib = dlopen("libra_tls_attest.so", RTLD_LAZY);
-        if (!ra_tls_attest_lib) {
+        if (!ra_tls_attest_lib)
+        {
             mbedtls_printf("User requested RA-TLS attestation but cannot find lib\n");
             return 1;
         }
 
-        char* error;
+        char *error;
         ra_tls_create_key_and_crt_der_f = dlsym(ra_tls_attest_lib, "ra_tls_create_key_and_crt_der");
-        if ((error = dlerror()) != NULL) {
+        if ((error = dlerror()) != NULL)
+        {
             mbedtls_printf("%s\n", error);
             return 1;
         }
-    } else {
+    }
+    else
+    {
         mbedtls_printf("Unrecognized remote attestation type: %s\n", attestation_type_str);
         return 1;
     }
@@ -108,15 +122,17 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     fflush(stdout);
 
     ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
-                                (const unsigned char*)pers, strlen(pers));
-    if (ret != 0) {
+                                (const unsigned char *)pers, strlen(pers));
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
         goto exit;
     }
 
     mbedtls_printf(" ok\n");
 
-    if (ra_tls_attest_lib) {
+    if (ra_tls_attest_lib)
+    {
         mbedtls_printf(
             "\n  . Creating the RA-TLS server cert and key (using \"%s\" as "
             "attestation type)...",
@@ -127,25 +143,27 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
         size_t der_crt_size;
 
         ret = (*ra_tls_create_key_and_crt_der_f)(&der_key, &der_key_size, &der_crt, &der_crt_size);
-        if (ret != 0) {
+        if (ret != 0)
+        {
             mbedtls_printf(" failed\n  !  ra_tls_create_key_and_crt_der returned %d\n\n", ret);
             goto exit;
         }
 
-        ret = mbedtls_x509_crt_parse(&srvcert, (unsigned char*)der_crt, der_crt_size);
-        if (ret != 0) {
+        ret = mbedtls_x509_crt_parse(&srvcert, (unsigned char *)der_crt, der_crt_size);
+        if (ret != 0)
+        {
             mbedtls_printf(" failed\n  !  mbedtls_x509_crt_parse returned %d\n\n", ret);
             goto exit;
         }
 
-        ret = mbedtls_pk_parse_key(&pkey, (unsigned char*)der_key, der_key_size, /*pwd=*/NULL, 0,
+        ret = mbedtls_pk_parse_key(&pkey, (unsigned char *)der_key, der_key_size, /*pwd=*/NULL, 0,
                                    mbedtls_ctr_drbg_random, &ctr_drbg);
-        if (ret != 0) {
+        if (ret != 0)
+        {
             mbedtls_printf(" failed\n  !  mbedtls_pk_parse_key returned %d\n\n", ret);
             goto exit;
         }
     }
-    
 
     mbedtls_printf(" ok\n");
     printf("Hello");
@@ -153,7 +171,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     fflush(stdout);
 
     ret = mbedtls_net_bind(&listen_fd, NULL, server_port_str, MBEDTLS_NET_PROTO_TCP);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_net_bind returned %d\n\n", ret);
         goto exit;
     }
@@ -165,7 +184,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
 
     ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_SERVER, MBEDTLS_SSL_TRANSPORT_STREAM,
                                       MBEDTLS_SSL_PRESET_DEFAULT);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
         goto exit;
     }
@@ -174,13 +194,15 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
 
     ret = mbedtls_ssl_conf_own_cert(&conf, &srvcert, &pkey);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_ssl_conf_own_cert returned %d\n\n", ret);
         goto exit;
     }
 
     ret = mbedtls_ssl_setup(&ssl, &conf);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
         goto exit;
     }
@@ -204,7 +226,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     fflush(stdout);
 
     ret = mbedtls_net_accept(&listen_fd, &client_fd, NULL, 0, NULL);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         mbedtls_printf(" failed\n  ! mbedtls_net_accept returned %d\n\n", ret);
         goto exit;
     }
@@ -216,8 +239,10 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     mbedtls_printf("  . Performing the SSL/TLS handshake...");
     fflush(stdout);
 
-    while ((ret = mbedtls_ssl_handshake(&ssl)) != 0) {
-        if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
+    while ((ret = mbedtls_ssl_handshake(&ssl)) != 0)
+    {
+        if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+        {
             mbedtls_printf(" failed\n  ! mbedtls_ssl_handshake returned %d\n\n", ret);
             goto reset;
         }
@@ -229,7 +254,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     //  code for macshares and reading
     uint8_t buffer[MAX_MSG_SIZE];
     size_t msg_len;
-    do {
+    do
+    {
         msg_len = sizeof(buffer) - 1;
         memset(buf, 0, sizeof(buffer));
         ret = mbedtls_ssl_read(&ssl, buffer, msg_len);
@@ -237,34 +263,37 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
         if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE)
             continue;
 
-        if (ret <= 0) {
-            switch (ret) {
-                case MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY:
-                    mbedtls_printf(" connection was closed gracefully\n");
-                    break;
+        if (ret <= 0)
+        {
+            switch (ret)
+            {
+            case MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY:
+                mbedtls_printf(" connection was closed gracefully\n");
+                break;
 
-                case MBEDTLS_ERR_NET_CONN_RESET:
-                    mbedtls_printf(" connection was reset by peer\n");
-                    break;
+            case MBEDTLS_ERR_NET_CONN_RESET:
+                mbedtls_printf(" connection was reset by peer\n");
+                break;
 
-                default:
-                    mbedtls_printf(" mbedtls_ssl_read returned -0x%x\n", -ret);
-                    break;
+            default:
+                mbedtls_printf(" mbedtls_ssl_read returned -0x%x\n", -ret);
+                break;
             }
 
             break;
         }
 
         msg_len = ret;
-        mbedtls_printf(" %ld bytes read %s\n", msg_len, (char*)buffer);
+        mbedtls_printf(" %ld bytes read %s\n", msg_len, (char *)buffer);
 
         if (ret > 0)
             break;
     } while (1);
 
-    SecretShare* message;
+    SecretShare *message;
     message = secret_share__unpack(NULL, msg_len, buffer);
-    if (message == NULL) {
+    if (message == NULL)
+    {
         fprintf(stderr, "Error unpacking incoming message\n");
     }
 
@@ -278,7 +307,7 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
 
     // Display the message's fields
     printf("Received for %d: mackeyshare_2=%s", player_number_defined,
-           message->mackeyshare_2);  // required field
+           message->mackeyshare_2); // required field
     printf("  mackeyshare_p=%s\n", message->mackeyshare_p);
     printf("Player no: %d \n", player_number_defined);
     // Player_MAC_Keys_p[player_number_defined] = message->mackeyshare_p;
@@ -286,7 +315,7 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
     memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, KEY_LENGTH);
     memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, KEY_LENGTH);
 
-    printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]);  // required field
+    printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]); // required field
     printf("  mackeyshare_p=%s\n", Player_MAC_Keys_p[player_number_defined]);
 
     // Free the unpacked message
@@ -296,8 +325,10 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
 
     mbedtls_printf("  . Closing the connection...");
 
-    while ((ret = mbedtls_ssl_close_notify(&ssl)) < 0) {
-        if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
+    while ((ret = mbedtls_ssl_close_notify(&ssl)) < 0)
+    {
+        if (ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE)
+        {
             mbedtls_printf(" failed\n  ! mbedtls_ssl_close_notify returned %d\n\n", ret);
             goto reset;
         }
@@ -310,7 +341,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
 
 reset:
 #ifdef MBEDTLS_ERROR_C
-    if (ret != 0) {
+    if (ret != 0)
+    {
         char error_buf[100];
         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
         mbedtls_printf("Last error was: %d - %s\n\n", ret, error_buf);
@@ -319,7 +351,8 @@ reset:
 
 exit:
 #ifdef MBEDTLS_ERROR_C
-    if (ret != 0) {
+    if (ret != 0)
+    {
         char error_buf[100];
         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
         mbedtls_printf("Last error was: %d - %s\n\n", ret, error_buf);
