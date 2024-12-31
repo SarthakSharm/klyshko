@@ -1,0 +1,184 @@
+Starting player 0 with enclave mr_enclave: fbcc91c7ae5721b42cb65ca7c43cf3e137321e232ae0bc9b7632462640a5c1df and mr_signer: 581e423ea8652f4e7c4d2ef0366970617f739fa39bffe027f5e619a22103dccf
+Player 0 session complete.
+Gramine is starting. Parsing TOML manifest file, this may take some time...
+-----------------------------------------------------------------------------------------------------------------------
+Gramine detected the following insecure configurations:
+
+  - sgx.debug = true                           (this is a debug enclave)
+  - loader.insecure__use_cmdline_argv = true   (forwarding command-line args from untrusted host to the app)
+  - loader.insecure__use_host_env = true       (forwarding environment vars from untrusted host to the app)
+  - sgx.allowed_files = [ ... ]                (some files are passed through from untrusted host without verification)
+
+Gramine will continue application execution, but this configuration must not be used in production!
+-----------------------------------------------------------------------------------------------------------------------
+
+Entered the CRG main function.
+
+GENERATED SEED ------- :abaf13c175bde4ee
+Getting environment variables ...kii_job_id_defined: 1920bb26-dsee-dzfw-vdsdsa14fds4
+Player 0 endpoint: 127.0.0.1:1026Player 1 endpoint: 127.0.0.1:1025ok
+Local attestation starts . . .Inside local attestation function
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+  . Bind on https://localhost:4433/ ... ok
+  . Setting up the SSL data.... ok
+  . Waiting for a remote connection ... ok
+  . Performing the SSL/TLS handshake...ssl_msg.c:4861: mbedtls_ssl_fetch_input() returned -29312 (-0x7280)
+
+ssl_msg.c:4220: ssl_get_next_record() returned -29312 (-0x7280)
+
+ssl_tls13_generic.c:0057: mbedtls_ssl_read_record() returned -29312 (-0x7280)
+
+ssl_tls13_server.c:3465: ssl_tls13_process_client_hello() returned -29312 (-0x7280)
+
+ failed
+  ! mbedtls_ssl_handshake returned -29312
+
+Last error was: -29312 - SSL - The connection indicated an EOF
+
+Last error was: -29312 - SSL - The connection indicated an EOF
+
+End of CRG.c local attestation
+******************Player 0:
+Player 0: 
+Player 1: 
+Player 1: 
+Remote attestation starts..
+In client code
+Value of a: fbcc91c7ae5721b42cb65ca7c43cf3e137321e232ae0bc9b7632462640a5c1df
+[ using our own SGX-measurement verification callback (via command line options) ]
+  - ignoring ISV_PROD_ID
+  - ignoring ISV_SVN
+
+  . Seeding the random number generator... ok
+
+  . Creating the RA-TLS server cert and key (using "dcap" as attestation type)... ok
+Extracted port at start in client: 1025
+Extracted ip at start in client: 127.0.0.1
+  . Connecting to tcp/127.0.0.1/1025... ok
+  . Setting up the SSL/TLS structure... ok
+ ok
+  . Installing RA-TLS callback ... ok
+  . Performing the SSL/TLS handshake...ssl_tls13_generic.c:1651: Perform PSA-based ECDH/FFDH computation.
+
+ssl_tls13_generic.c:1689: psa_generate_key() returned -27648 (-0x6c00)
+
+ failed
+  ! mbedtls_ssl_handshake returned -0x6c00
+  ! ra_tls_verify_callback_results:
+    attestation_scheme=0, err_loc=0, 
+  ! unknown attestation scheme!
+
+Last error was: -27648 - SSL - Internal error (eg, unexpected failure in lower-level module)
+
+opened successfully: Cannot allocate memory
+opened successfully: Invalid argument
+opened successfully: Invalid argument
+opened successfully: Invalid argument
+WARNING: insecure preprocessing
+Writing to file in Player-Data//2-p-128/
+ Key 0: -52857392412800803273483886373570358874
+ Key 1: 82263685123389593175765478011813202703
+--------------
+Final Key: 29406292710588789902281591638242843829
+ Key 0: 0x8fde0da803
+ Key 1: 0xc538e388cc
+--------------
+Final Key: 0x4ae6ee20cf
+Opening Player-Data//2-2-40/Triples-2-P0
+Opening Player-Data//2-2-40/Triples-2-P1
+Writing to file in Player-Data//2-p-128/
+Opening Player-Data//2-p-128/Triples-p-P0
+Opening Player-Data//2-p-128/Triples-p-P1
+Opening Player-Data//2-2-40/Bits-2-P0
+Opening Player-Data//2-2-40/Bits-2-P1
+Opening Player-Data//2-p-128/Bits-p-P0
+Opening Player-Data//2-p-128/Bits-p-P1
+Opening Player-Data//2-2-40/Squares-2-P0
+Opening Player-Data//2-2-40/Squares-2-P1
+Opening Player-Data//2-p-128/Squares-p-P0
+Opening Player-Data//2-p-128/Squares-p-P1
+Opening Player-Data//2-2-40/Inputs-2-P0-0
+Opening Player-Data//2-2-40/Inputs-2-P1-0
+Opening Player-Data//2-2-40/Inputs-2-P0-1
+Opening Player-Data//2-2-40/Inputs-2-P1-1
+Opening Player-Data//2-p-128/Inputs-p-P0-0
+Opening Player-Data//2-p-128/Inputs-p-P1-0
+Opening Player-Data//2-p-128/Inputs-p-P0-1
+Opening Player-Data//2-p-128/Inputs-p-P1-1
+Opening Player-Data//2-2-40/Inverses-2-P0
+Opening Player-Data//2-2-40/Inverses-2-P1
+Opening Player-Data//2-p-128/Inverses-p-P0
+Opening Player-Data//2-p-128/Inverses-p-P1
+Opening Player-Data//2-DR-64/Triples-DR-P0
+Opening Player-Data//2-DR-64/Triples-DR-P1
+Opening Player-Data//2-DR-64/Bits-DR-P0
+Opening Player-Data//2-DR-64/Bits-DR-P1
+Opening Player-Data//2-DR-64/Inputs-DR-P0-0
+Opening Player-Data//2-DR-64/Inputs-DR-P1-0
+Opening Player-Data//2-DR-64/Inputs-DR-P0-1
+Opening Player-Data//2-DR-64/Inputs-DR-P1-1
+Opening Player-Data//2-DR-64/Squares-DR-P0
+Opening Player-Data//2-DR-64/Squares-DR-P1
+Opening Player-Data//2-DR-64/daBits-DR-P0
+Opening Player-Data//2-DR-64/daBits-DR-P1
+Opening Player-Data//2-DB-64/Triples-DB-P0
+Opening Player-Data//2-DB-64/Triples-DB-P1
+Opening Player-Data//2-DB-64/Bits-DB-P0
+Opening Player-Data//2-DB-64/Bits-DB-P1
+ Key 0: 1715737961152
+ Key 1: 1081437809751
+--------------
+Final Key: 598152515351
+Opening Player-Data//2-T-64/Triples-T-P0
+Opening Player-Data//2-T-64/Triples-T-P1
+Opening Player-Data//2-T-64/Bits-T-P0
+Opening Player-Data//2-T-64/Bits-T-P1
+Opening Player-Data//2-T-64/Inputs-T-P0-0
+Opening Player-Data//2-T-64/Inputs-T-P1-0
+Opening Player-Data//2-T-64/Inputs-T-P0-1
+Opening Player-Data//2-T-64/Inputs-T-P1-1
+ Key 0: 0xdba0f51f4d
+ Key 1: 0x1292e74059
+--------------
+Final Key: 0xc932125f14
+Opening Player-Data//2-TT-8/Triples-TT-P0
+Opening Player-Data//2-TT-8/Triples-TT-P1
+Opening Player-Data//2-TT-8/Bits-TT-P0
+Opening Player-Data//2-TT-8/Bits-TT-P1
+Opening Player-Data//2-TT-8/Inputs-TT-P0-0
+Opening Player-Data//2-TT-8/Inputs-TT-P1-0
+Opening Player-Data//2-TT-8/Inputs-TT-P0-1
+Opening Player-Data//2-TT-8/Inputs-TT-P1-1
+Opening Player-Data//2-p-128/daBits-p-P0
+Opening Player-Data//2-p-128/daBits-p-P1
+Writing to file in Player-Data//2-Dp-128/
+Opening Player-Data//2-Dp-128/Triples-Dp-P0
+Opening Player-Data//2-Dp-128/Triples-Dp-P1
+Opening Player-Data//2-Dp-128/Bits-Dp-P0
+Opening Player-Data//2-Dp-128/Bits-Dp-P1
+Opening Player-Data//2-Dp-128/Inputs-Dp-P0-0
+Opening Player-Data//2-Dp-128/Inputs-Dp-P1-0
+Opening Player-Data//2-Dp-128/Inputs-Dp-P0-1
+Opening Player-Data//2-Dp-128/Inputs-Dp-P1-1
+Opening Player-Data//2-Dp-128/Squares-Dp-P0
+Opening Player-Data//2-Dp-128/Squares-Dp-P1
+Opening Player-Data//2-Dp-128/daBits-Dp-P0
+Opening Player-Data//2-Dp-128/daBits-Dp-P1
+Opening Player-Data//2-Dp-128/Inverses-Dp-P0
+Opening Player-Data//2-Dp-128/Inverses-Dp-P1
+Opening Player-Data//2-D2-40/Triples-D2-P0
+Opening Player-Data//2-D2-40/Triples-D2-P1
+Opening Player-Data//2-D2-40/Bits-D2-P0
+Opening Player-Data//2-D2-40/Bits-D2-P1
+Opening Player-Data//2-D2-40/Inputs-D2-P0-0
+Opening Player-Data//2-D2-40/Inputs-D2-P1-0
+Opening Player-Data//2-D2-40/Inputs-D2-P0-1
+Opening Player-Data//2-D2-40/Inputs-D2-P1-1
+Opening Player-Data//2-D2-40/Squares-D2-P0
+Opening Player-Data//2-D2-40/Squares-D2-P1
+Opening Player-Data//2-D2-40/daBits-D2-P0
+Opening Player-Data//2-D2-40/daBits-D2-P1
+Opening Player-Data//2-D2-40/Inverses-D2-P0
+Opening Player-Data//2-D2-40/Inverses-D2-P1
