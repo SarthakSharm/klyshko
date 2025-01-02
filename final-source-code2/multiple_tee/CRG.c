@@ -253,15 +253,13 @@ int main(int argc, char** argv) {
     printf("Player 1: %s\n", Player_MAC_Keys_p[1]);
     printf("Player 1: %s\n", Player_MAC_Keys_2[1]);
     printf("Remote attestation starts..\n");
-    if (player_number_defined == 0) {
-        ssl_client_setup_and_handshake(argv[1], argv[2], argv[3], argv[4], Player_MAC_Keys_p,
-                                       Player_MAC_Keys_2, Seed);
-    } else if (player_number_defined == number_of_players - 1) {
+    if (player_number_defined > 0)
+    {
         ssl_server_setup_and_handshake(argv[1], argv[2], argv[3], argv[4], Player_MAC_Keys_p,
                                        Player_MAC_Keys_2, Seed);
-    } else {
-        ssl_server_setup_and_handshake(argv[1], argv[2], argv[3], argv[4], Player_MAC_Keys_p,
-                                       Player_MAC_Keys_2, Seed);
+    }
+    if (player_number_defined < number_of_players - 1)
+    {
         ssl_client_setup_and_handshake(argv[1], argv[2], argv[3], argv[4], Player_MAC_Keys_p,
                                        Player_MAC_Keys_2, Seed);
     }
