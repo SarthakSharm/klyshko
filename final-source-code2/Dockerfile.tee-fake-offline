@@ -98,5 +98,5 @@ RUN rm -rf Player-Data && \
     mkdir -p Player-Data/2-p-128
 # Copy libSPDZ.so to /usr/local/lib
 RUN cp libSPDZ.so /usr/local/lib
-RUN apt-get update  &&  apt-get install protobuf-c-compiler libprotobuf-c-dev protobuf-compiler
+RUN apt-get update  &&  apt-get install -y protobuf-c-compiler libprotobuf-c-dev protobuf-compiler
 
