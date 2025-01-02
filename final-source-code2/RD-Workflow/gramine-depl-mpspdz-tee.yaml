@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gramine-mpspdz-tee
+  labels:
+    app: gramine-mpspdz-tee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gramine-mpspdz-tee
+  template:
+    metadata:
+      labels:
+        app: gramine-mpspdz-tee
+    spec:
+      containers:
+      - name: gramine-mpspdz-tee
+        image: ghcr.io/datakaveri/gramine-base:mpspdz-tee-a72d129
+        imagePullPolicy: Always
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "gramine-sgx-gen-private-key; while true; do sleep 30; done;" ]
+        resources:
+          limits:
+            sgx.intel.com/epc: "512Mi"
+        volumeMounts:
+        - name: var-run-aesmd
+          mountPath: /var/run/aesmd
+      restartPolicy: "Always"
+      volumes:
+      - name: var-run-aesmd
+        hostPath:
+          path: /var/run/aesmd

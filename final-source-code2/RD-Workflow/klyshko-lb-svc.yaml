@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: klyshko-svc
+  labels:
+    app: gramine-mpspdz-tee
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000           # External port to expose
+    targetPort: 5000     # Port on the pods the traffic will be forwarded to
+    protocol: TCP
+  selector:
+    app: gramine-mpspdz-tee         # Ensures this service targets pods with the same label
