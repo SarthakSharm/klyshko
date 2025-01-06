@@ -28,8 +28,8 @@ export KII_TUPLE_FILE="/kii/tuples"
 export KII_PLAYER_COUNT="2"
 export KII_JOB_ID="1920bb26-dsee-dzfw-vdsdsa14fds4"
 export KII_TUPLE_TYPE="BIT_GFP"
-export KII_PLAYER_ENDPOINT_1="127.0.0.1:1025"
-export KII_PLAYER_ENDPOINT_0="127.0.0.1:1026"
+export KII_PLAYER_ENDPOINT_1="4.224.102.120:5000"
+export KII_PLAYER_ENDPOINT_0="4.188.114.199:5000"
 export BASE_PORT="4433"
 
 # Run make with SGX and RA_TYPE as build variables
