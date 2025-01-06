@@ -3,7 +3,9 @@ kind: Service
 metadata:
   name: klyshko-svc
   labels:
-    app: gramine-mpspdz-tee
+    app: gramine-mpspdz-tee-remote
+  annotations: 
+    service.beta.kubernetes.io/port_5000_no_probe_rule : "true"
 spec:
   type: LoadBalancer
   ports:
@@ -11,4 +13,4 @@ spec:
     targetPort: 5000     # Port on the pods the traffic will be forwarded to
     protocol: TCP
   selector:
-    app: gramine-mpspdz-tee         # Ensures this service targets pods with the same label
+    app: gramine-mpspdz-tee-remote         # Ensures this service targets pods with the same label

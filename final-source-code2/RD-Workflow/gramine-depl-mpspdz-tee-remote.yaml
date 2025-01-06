@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gramine-mpspdz-tee
+  name: gramine-mpspdz-tee-remote
   labels:
-    app: gramine-mpspdz-tee
+    app: gramine-mpspdz-tee-remote
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gramine-mpspdz-tee
+      app: gramine-mpspdz-tee-remote
   template:
     metadata:
       labels:
-        app: gramine-mpspdz-tee
+        app: gramine-mpspdz-tee-remote
     spec:
       tolerations:
       - key: "kubernetes.azure.com/scalesetpriority"
