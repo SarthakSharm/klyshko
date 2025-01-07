@@ -134,9 +134,8 @@ char* addHex2(const char* hex1, const char* hex2) {
 
 int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Player_MAC_Keys_p[],
                                    char* Player_MAC_Keys_2[], char* Seed) {
-    printf("In server code\n");
+    printf("Player number %d acting as server \n", player_number_defined);
     int no_of_parameters = 5;
-    mbedtls_printf("Value of a: %s\n", a);
     int ret;
     size_t len;
     mbedtls_net_context listen_fd;
@@ -146,8 +145,8 @@ int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
     char* error;
 
     //***
-    char server_port[5];
-    char server_ip[16];
+    char server_port[10];
+    char server_ip[20];
 
     //****$$$$****//
     int exit_code = MBEDTLS_EXIT_FAILURE;
@@ -283,9 +282,7 @@ int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         }
     }
 
-    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
-    mbedtls_printf(" ok\n");
-
+    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
     if (ra_tls_verify_lib) {
         /* use RA-TLS verification callback; this will overwrite CA chain set up above */
         mbedtls_printf("  . Installing RA-TLS callback ...");
@@ -381,11 +378,9 @@ int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         server_ip[ip_length] = '\0';
     }
 
-    printf("Extracted port at start in server: %s\n", server_port);  // Output should be "4444"
-    printf("Extracted ip at start in server: %s\n", server_ip);
     //***$$$***
 
-    mbedtls_printf("  . Bind on https://localhost:%s/ ...", server_port);
+    mbedtls_printf("  . Bind on https://%s:%s/ ...",server_ip,server_port);
     fflush(stdout);
 
     ret = mbedtls_net_bind(&listen_fd, NULL, server_port, MBEDTLS_NET_PROTO_TCP);
@@ -485,11 +480,10 @@ reset:
         /* verification failed for whatever reason, fail loudly */
         goto exit;
     } else {
-        mbedtls_printf(" ok\n");
+        mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded \n");
     }
     //****$$****
 
-    mbedtls_printf("  < Read from client:");
     fflush(stdout);
     PlayerInfo* msg;
     uint8_t buff[MAX_MSG_SIZE];
@@ -533,7 +527,7 @@ reset:
         fprintf(stderr, "Error unpacking incoming message\n");
     }
 
-    printf("Other player number : %d\n", other_player_number);
+    printf(" Step 5 Other player number : %d\n", other_player_number);
 
     // Display the message's fields
     printf("Received: kii_job_id=%s\n", msg->kii_job_id);  // required field
@@ -547,7 +541,7 @@ reset:
             rcd = mbedtls_ssl_close_notify(&ssl);
         }
     }
-
+     printf(" Step 5 Other player number : %d  player number and Job ID is verified and correct\n", other_player_number);
     // code for macshares and reading
     uint8_t buffer[MAX_MSG_SIZE];
     size_t msg_len;
@@ -578,8 +572,6 @@ reset:
         }
 
         msg_len = ret;
-        mbedtls_printf(" %ld bytes read: \n", msg_len);
-
         if (ret > 0)
             break;
     } while (1);
@@ -591,7 +583,7 @@ reset:
     }
 
     // Display the message's fields
-    printf("Received: mackeyshare_2=%s", message->mackeyshare_2);  // required field
+    printf("Step 6 : Mac key and seed share received from player number %d : mackeyshare_2=%s", other_player_number, message->mackeyshare_2);  // required field
     printf("  mackeyshare_p=%s\n", message->mackeyshare_p);
     printf("  seeds=%s\n", message->seeds);
 
@@ -631,7 +623,6 @@ reset:
     }
 
     secret_share__pack(&secret_message, secret_buffer);
-    fprintf(stderr, "Writing %d serialized bytes\n", lenth);
     while ((ret = mbedtls_ssl_write(&ssl, secret_buffer, lenth)) <= 0) {
         if (ret == MBEDTLS_ERR_NET_CONN_RESET) {
             mbedtls_printf(" failed\n  ! peer closed the connection\n\n");
@@ -645,8 +636,7 @@ reset:
     }
 
     lenth = ret;
-    mbedtls_printf(" %d bytes written\n\n%s\n", lenth, (char*)secret_buffer);
-
+    mbedtls_printf("Step 6 : Sending Mac key and Seed Shares to player no %d \n", other_player_number);
     fflush(stdout);
 
     // pack

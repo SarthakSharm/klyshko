@@ -224,7 +224,7 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
         }
     }
 
-    mbedtls_printf(" ok\n");
+    mbedtls_printf(" Step 2 local attestation is successful\n");
 
     // PROTOBUFF STARTING - UNPACKING OF DATA
     //  code for macshares and reading
@@ -257,8 +257,6 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
         }
 
         msg_len = ret;
-        mbedtls_printf(" %ld bytes read %s\n", msg_len, (char*)buffer);
-
         if (ret > 0)
             break;
     } while (1);
@@ -269,19 +267,8 @@ int local_attestation(char* Player_MAC_Keys_p[], char* Player_MAC_Keys_2[]) {
         fprintf(stderr, "Error unpacking incoming message\n");
     }
 
-    // char str[20]; // Adjust size as needed
-    // sprintf(str, "%d", message->mackeyshare_2); // Convert to string
-    // Player_MAC_Keys_2[player_number_defined] = strdup(str); // Duplicate string to avoid pointer
-    // issues
 
-    // Player_MAC_Keys_p[player_number_defined] = "ea5225";
-    // Player_MAC_Keys_2[player_number_defined] = message->mackeyshare_2;
-
-    // Display the message's fields
-    printf("Received for %d: mackeyshare_2=%s", player_number_defined,
-           message->mackeyshare_2);  // required field
-    printf("  mackeyshare_p=%s\n", message->mackeyshare_p);
-    printf("Player no: %d \n", player_number_defined);
+    printf(" Step 3 Recieved the Mac shares from KII \n");
     // Player_MAC_Keys_p[player_number_defined] = message->mackeyshare_p;
     // Player_MAC_Keys_2[player_number_defined] = message->mackeyshare_2;
     memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, KEY_LENGTH);

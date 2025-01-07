@@ -120,9 +120,8 @@ char* addHex(const char* hex1, const char* hex2) {
 
 int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Player_MAC_Keys_p[],
                                    char* Player_MAC_Keys_2[], char* Seed) {
-    printf("In client code\n");
+    printf("Player number %d  acting as client\n", player_number_defined);
     int no_of_parameters = 5;
-    mbedtls_printf("Value of a: %s\n", a);
     int ret;
     size_t len;
     int exit_code = MBEDTLS_EXIT_FAILURE;
@@ -377,7 +376,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
         //***$$$***
 
-        mbedtls_printf("  . Connecting to tcp/%s/%s...", server_ip, server_port);
+        mbedtls_printf("  . Connecting to tcp/%s:%s...", server_ip, server_port);
         fflush(stdout);
 
         // ret = mbedtls_net_connect(&server_fd, SERVER_NAME, SERVER_PORT, MBEDTLS_NET_PROTO_TCP);
@@ -416,7 +415,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
         fflush(stdout);
 
-        mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
+        mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
         mbedtls_printf(" ok\n");
 
         if (ra_tls_verify_lib) {
@@ -493,10 +492,9 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
             /* verification failed for whatever reason, fail loudly */
             goto exit;
         } else {
-            mbedtls_printf(" ok\n");
+            mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded\n");
         }
 
-        mbedtls_printf("  > Write to server:");
         fflush(stdout);
 
         len = sprintf((char*)buf, GET_REQUEST);
@@ -517,7 +515,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         }
 
         player_info__pack(&msg, buff);
-        fprintf(stderr, "Writing %d serialized bytes\n", playlen);
+        fprintf(stderr, "Step 5: Sending Player number and Job ID to player number %d \n", other_player_number);
         mbedtls_ssl_write(&ssl, buff, playlen);
 
         // code for packing the macshares and sending over the TLS dconnection again to the server
@@ -535,7 +533,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         }
 
         secret_share__pack(&message, buffer);
-        fprintf(stderr, "Writing %d serialized bytes\n", lent);
+        fprintf(stderr, "Step 6 Sending Mac key and Seed Shares to player no. %d  \n", other_player_number);
         mbedtls_ssl_write(&ssl, buffer, lent);
         // EOC for sending
         //  code for unpacking the files from server side and result displaying
@@ -552,7 +550,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         }
 
         // Display the message's fields
-        printf("Received: mackeyshare_2=%s", secret_message->mackeyshare_2);  // required field
+        printf("Step 6 Received Mac Key share and seed from player_number %d : mackeyshare_2=%s", other_player_number, secret_message->mackeyshare_2);  // required field
         printf("  mackeyshare_p=%s\n", secret_message->mackeyshare_p);
         printf("  seeds=%s\n", secret_message->seeds);
 

@@ -110,10 +110,7 @@ void writeFile(const char* filename, const char* text) {
     if (file == NULL) {
         perror("Error openin file while writing");
         exit(1);  // Exit if there's an error opening the file
-    } else {
-        perror("opened successfully");
-    }
-
+    } 
     // Write the text to the file
     fprintf(file, "%s", text);
 
@@ -178,7 +175,6 @@ int main(int argc, char** argv) {
     char* n = "10000";
 
     get_random_hex(Seed, 16);
-    printf("GENERATED SEED ------- :%s\n", Seed);
     printf("Getting environment variables ...");
     const char* env_names[] = {"KII_TUPLES_PER_JOB", "KII_SHARED_FOLDER", "KII_TUPLE_FILE",
                                "KII_PLAYER_NUMBER",  "KII_PLAYER_COUNT",  "KII_JOB_ID",
@@ -248,10 +244,6 @@ int main(int argc, char** argv) {
     printf("Local attestation starts . . .");
     local_attestation(Player_MAC_Keys_p, Player_MAC_Keys_2);
     printf("End of CRG.c local attestation\n");
-    printf("******************Player 0:%s\n", Player_MAC_Keys_p[0]);
-    printf("Player 0: %s\n", Player_MAC_Keys_2[0]);
-    printf("Player 1: %s\n", Player_MAC_Keys_p[1]);
-    printf("Player 1: %s\n", Player_MAC_Keys_2[1]);
     printf("Remote attestation starts..\n");
     if (player_number_defined > 0)
     {
@@ -264,11 +256,7 @@ int main(int argc, char** argv) {
                                        Player_MAC_Keys_2, Seed);
     }
 
-    printf("\n\n\nFINAL FINAL ATTESTATION :\nPlayer 0:%s\n", Player_MAC_Keys_p[0]);
-    printf("Player 0: %s\n", Player_MAC_Keys_2[0]);
-    printf("Player 1: %s\n", Player_MAC_Keys_p[1]);
-    printf("Player 1: %s\n", Player_MAC_Keys_2[1]);
-    printf("SEED : %s\n", Seed);
+
     printf("End of Remote attestation..\n");
 
     TupleType tuple_type = getTupleType(tuple_type_str);
@@ -283,12 +271,11 @@ int main(int argc, char** argv) {
     } else {
         snprintf(arg2, sizeof(arg2), arg2FormatByType[tuple_type], n);
     }
-    printf("step 4 complete");
 
     int player_count  = atoi(number_of_players_str);
     int player_number = atoi(player_number_str);
     create_mac_key_shares(player_count, player_number, Player_MAC_Keys_p, Player_MAC_Keys_2);
-    printf("mac key created");
+    printf("Step 7: Running Fake Offline as execvp process");
 
     char* args[] = {
         "../Fake-Offline.x",
