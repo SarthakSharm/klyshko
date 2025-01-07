@@ -150,12 +150,12 @@ void create_mac_key_shares(int pc, int pn, char* Player_MAC_Keys_p[], char* Play
 
             char dataToWrite[256];
 
-            printf("----- TRYING TO WRITE for MAC key share for player %d written to %s\n",
-                   playerNumber, macKeyShareFile);
+            // printf("----- TRYING TO WRITE for MAC key share for player %d written to %s\n",
+            //        playerNumber, macKeyShareFile);
             snprintf(dataToWrite, sizeof(dataToWrite), "%d %s", pc, macKeyShare);
             writeFile(macKeyShareFile, dataToWrite);
 
-            printf("MAC key share for player %d written to %s\n", playerNumber, macKeyShareFile);
+            // printf("MAC key share for player %d written to %s\n", playerNumber, macKeyShareFile);
         }
     }
 }

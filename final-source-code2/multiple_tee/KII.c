@@ -311,7 +311,7 @@ int main(int argc, char** argv) {
 
     fflush(stdout);
 
-    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
+    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
     mbedtls_printf(" ok\n");
 
     if (ra_tls_verify_lib) {
@@ -423,7 +423,7 @@ int main(int argc, char** argv) {
     // EOC for sending
 
     length = ret;
-    mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", length, (char*)buffer);
+    mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", (char*)buffer);
 
     // PROTO BUFF ENDING
 

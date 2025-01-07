@@ -415,7 +415,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
         fflush(stdout);
 
-        mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
+        mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
         mbedtls_printf(" ok\n");
 
         if (ra_tls_verify_lib) {
