@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
     //                               "c347ce3d9e165e4e85221f9da7591d92"};
 
     char Seed[17];
-    char* n = "10000";
+    //char* n = "10000";
 
     get_random_hex(Seed, 16);
     printf("GENERATED SEED ------- :%s\n", Seed);
@@ -195,6 +195,8 @@ int main(int argc, char** argv) {
             fprintf(stderr, "Error: Environment variable %s not found.\n", env_names[i]);
         }
     }
+    char* n                     = env_values[0];
+    char* tuple_file            = env_values[2];
     char* tuple_type_str        = env_values[6];
     char* kii_job_id_str        = env_values[5];  // KII_JOB_ID
     char* player_number_str     = env_values[3];  // KII_PLAYER_NUMBER
@@ -311,8 +313,29 @@ int main(int argc, char** argv) {
     printf("\n");
 
     // Step 8: Execute ./Fake-Offline.x using execvp
-    execvp(args[0], args);
+    int length = sizeof(args) / sizeof(args[0]);
 
+     // Join cmd array into a single command string
+    char cmdString[512] = {0}; // Buffer to hold the concatenated cmd
+    for (int i = 0; i < length  ; ++i) {
+        if (args[i] != NULL) { // Avoid null pointers
+            strcat(cmdString, args[i]); // Add the argument
+            strcat(cmdString, " ");    // Add a space between arguments
+        }
+    }
+
+    char destination_path[1024] = {0};
+    snprintf(destination_path, sizeof(destination_path), tupleFileByType[tuple_type], number_of_players_str, player_number_str);
+
+    // Construct the full command with the copy operation
+    char fullCommand[1024] = {0}; // Buffer for the full command
+    snprintf(fullCommand, sizeof(fullCommand), "%s&& cp Player-Data/%s %s", cmdString, destination_path, tuple_file);
+
+    // Prepare the args for execvp
+    char *cmd[] = {"/bin/bash", "-c", fullCommand, NULL};
+
+    // Step 8: Execute ./Fake-Offline.x using execvp
+    execvp("/bin/bash", cmd);
     // If execvp fails:
     perror("execvp failed");
     // ssl_client_setup_and_handshake(argv[1], argv[2], argv[3], argv[4]);

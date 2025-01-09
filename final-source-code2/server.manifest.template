@@ -22,13 +22,18 @@ fs.mounts = [
   { path = "/usr{{ arch_libdir }}", uri = "file:/usr{{ arch_libdir }}" },
   { path = "/etc", uri = "file:/etc" },
   { path = "/server", uri = "file:server" },
-  { path = "/Player-Data/", uri="file:Player-Data/"},
-  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P0", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P0", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P1", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P1", key_name = "_sgx_mrenclave"},
+  { type = "encrypted", path = "/Player-Data/", uri="file:Player-Data/", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P0", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P0", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P1", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P1", key_name = "_sgx_mrenclave"},
   { path = "/lib2/", uri="file:/lib/x86_64-linux-gnu/"},
   { path = "/Fake-Offline.x", uri="file:Fake-Offline.x"},
+  { path = "/bin/bash", uri = "file:/bin/bash" },
+  { path = "/etc/bash.bashrc", uri = "file:/etc/bash.bashrc" },
+  { path = "/etc/profile", uri = "file:/etc/profile" },
+  { path = "/bin/cp", uri = "file:/bin/cp" },
+  { path = "/kii", uri = "file:/kii/"}
 ]
 sys.enable_extra_runtime_domain_names_conf = true
 
@@ -56,6 +61,12 @@ sgx.trusted_files = [
   "file:/lib/x86_64-linux-gnu/",
   "file:etc/kii/secret-params/mac_key_share_p",
   "file:etc/kii/secret-params/mac_key_share_2",
+  # Add trusted files for bash
+  "file:/bin/bash",
+  "file:/etc/bash.bashrc",
+  "file:/etc/profile",
+  "file:/bin/cp",
+  "file:/kii/"
 ]
 
 sgx.allowed_files = [
@@ -70,4 +81,9 @@ sgx.allowed_files = [
   "file:/etc/sgx_default_qcnl.conf",
   "file:./Player-Data",
   "file:/lib/x86_64-linux-gnu",
+  "file:/bin/bash",
+  "file:/etc/bash.bashrc",
+  "file:/etc/profile",
+  "file:/bin/cp",
+  "file:/kii/"
 ]
