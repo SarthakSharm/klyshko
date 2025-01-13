@@ -72,5 +72,4 @@ gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${KII_PLAYER_NUMB
 
 ./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER >> "kii_${KII_PLAYER_NUMBER}.log" 2>&1 &
 
-echo "Player $KII_PLAYER_NUMBER session complete." >> "player_${KII_PLAYER_NUMBER}.log"
 

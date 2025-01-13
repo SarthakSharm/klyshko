@@ -59,18 +59,49 @@ export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
 export KII_PLAYER_NUMBER=0
+export KII_PLAYER_NAME="APOLLO"
 export RA_TLS_ALLOW_DEBUG_ENCLAVE_INSECURE=1
 export RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1
 export RA_TLS_ALLOW_HW_CONFIG_NEEDED=1
 export RA_TLS_ALLOW_SW_HARDENING_NEEDED=1
 
+box_out() {
+    local text="$1" # Text to display inside the box
+    local box_color="\e[43m" # Yellow background
+    local text_color="\e[32m" # Green text
+    local reset_color="\e[0m" # Reset to default
 
-echo "Starting player $KII_PLAYER_NUMBER with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${KII_PLAYER_NUMBER}.log"
+    local padding=2 # Padding around the text
+    local text_length=${#text}
+    local box_width=$((text_length + (2 * padding) + 2)) # Box width including borders
+
+    # Print top border
+    printf "${box_color}"
+    printf "%.0s " $(seq 1 $box_width)
+    printf "${reset_color}\n"
+
+    # Print text line with padding
+    printf "${box_color} "
+    printf "%.0s " $(seq 1 $padding)
+    printf "${text_color}%s${reset_color}" "$text"
+    printf "%.0s " $(seq 1 $padding)
+    printf " ${reset_color}\n"
+
+    # Print bottom border
+    printf "${box_color}"
+    printf "%.0s " $(seq 1 $box_width)
+    printf "${reset_color}\n"
+}
+
+
+box_out "[0] Starting execution for player $KII_PLAYER_NUMBER $KII_PLAYER_NAME"
+
+
+echo "Starting player $KII_PLAYER_NUMBER $KII_PLAYER_NAME with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${KII_PLAYER_NUMBER}.log"
         
 
 gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${KII_PLAYER_NUMBER}.log" 2>&1 &
 
 ./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER >> "kii_${KII_PLAYER_NUMBER}.log" 2>&1 &
 
-echo "Player $KII_PLAYER_NUMBER session complete." >> "player_${KII_PLAYER_NUMBER}.log"
 

@@ -24,13 +24,19 @@ fs.mounts = [
   { path = "/etc", uri = "file:/etc" },
   { path = "/server", uri = "file:server" },
   { path = "/client", uri = "file:client" },
-  { path = "/Player-Data/", uri="file:Player-Data/"},
-  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P0", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P0", key_name = "_sgx_mrenclave"},
-  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P1", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P1", key_name = "_sgx_mrenclave"},
+  { type = "encrypted", path = "/Player-Data/", uri="file:Player-Data/", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P0", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P0", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-p-128/Player-MAC-Keys-p-P1", uri="file:Player-Data/2-p-128/Player-MAC-Keys-p-P1", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P0", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P0", key_name = "_sgx_mrenclave"},
+#  { type = "encrypted", path = "/Player-Data/2-2-40/Player-MAC-Keys-2-P1", uri="file:Player-Data/2-2-40/Player-MAC-Keys-2-P1", key_name = "_sgx_mrenclave"},
   { path = "/lib2/", uri="file:/lib/x86_64-linux-gnu/"},
   { path = "/Fake-Offline.x", uri="file:Fake-Offline.x"},
+  { path = "/bin/bash", uri = "file:/bin/bash" },
+  { path = "/etc/bash.bashrc", uri = "file:/etc/bash.bashrc" },
+  { path = "/etc/profile", uri = "file:/etc/profile" },
+  { path = "/bin/cp", uri = "file:/bin/cp" },
+  { path = "/kii", uri = "file:/kii/"}
+
 ]
 
 sys.enable_extra_runtime_domain_names_conf = true
@@ -50,6 +56,12 @@ sgx.trusted_files = [
   "file:ssl/ca.crt",
   "file:Fake-Offline.x",
   "file:/lib/x86_64-linux-gnu/",
+  # Add trusted files for bash
+  "file:/bin/bash",
+  "file:/etc/bash.bashrc",
+  "file:/etc/profile",
+  "file:/bin/cp",
+  "file:/kii/"
 
 ]
 
@@ -65,4 +77,9 @@ sgx.allowed_files = [
   "file:/etc/sgx_default_qcnl.conf",
   "file:./Player-Data",
   "file:/lib/x86_64-linux-gnu",
+  "file:/bin/bash",
+  "file:/etc/bash.bashrc",
+  "file:/etc/profile",
+  "file:/bin/cp",
+  "file:/kii/"
 ]

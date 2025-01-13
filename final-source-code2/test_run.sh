@@ -58,18 +58,28 @@ export RA_TLS_MRENCLAVE="$mr_enclave"
 export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
-export KII_PLAYER_NUMBER=0
-export RA_TLS_ALLOW_DEBUG_ENCLAVE_INSECURE=1
-export RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1
-export RA_TLS_ALLOW_HW_CONFIG_NEEDED=1
-export RA_TLS_ALLOW_SW_HARDENING_NEEDED=1
+# Loop through each player in reverse order
+for (( i = KII_PLAYER_COUNT - 1; i >= 0; i-- )); do
+    echo "Starting server for player $i in the background (logging to player_${i}.log)..."
 
-
-echo "Starting player $KII_PLAYER_NUMBER with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${KII_PLAYER_NUMBER}.log"
+    # Export player-specific variables and start the player process in the background
+    (   
+        export KII_PLAYER_NUMBER=$i
+        export RA_TLS_ALLOW_DEBUG_ENCLAVE_INSECURE=1
+        export RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1
+        export RA_TLS_ALLOW_HW_CONFIG_NEEDED=1
+        export RA_TLS_ALLOW_SW_HARDENING_NEEDED=1
+        echo "Starting player $i with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${i}.log"
         
+        # Run the compiled executable for each player
+        gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${i}.log" 2>&1 &
 
-gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${KII_PLAYER_NUMBER}.log" 2>&1 &
+        ./KII "$mr_enclave" "$mr_signer" 0 0 $i >> "kii_${i}.log" 2>&1 &
+        echo "Player $i session complete." >> "player_${i}.log"
+    ) &
+done
 
-./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER >> "kii_${KII_PLAYER_NUMBER}.log" 2>&1 &
+echo "All player sessions have been started in the background. Check player logs (player_0.log, player_1.log, ...) for output."
 
 
+#./KII 6a37872a70cd68dffe3a2e9df1c9a8c7b4545ba829f999cf807de13475dcaf7f 22266b0bd0169b26a1e2b2c5a3c5b5471b0454bb01d8ec57e76d38cf7ed484f2 0 0 1

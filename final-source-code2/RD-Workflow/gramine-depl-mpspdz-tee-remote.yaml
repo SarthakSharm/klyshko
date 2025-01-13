@@ -31,8 +31,12 @@ spec:
         volumeMounts:
         - name: var-run-aesmd
           mountPath: /var/run/aesmd
+        - name: kii-volume
+          mountPath: /kii
       restartPolicy: "Always"
       volumes:
       - name: var-run-aesmd
         hostPath:
           path: /var/run/aesmd
+      - name: kii-volume
+        emptyDir: {}
