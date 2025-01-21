@@ -65,8 +65,7 @@ sgx.trusted_files = [
   "file:/bin/bash",
   "file:/etc/bash.bashrc",
   "file:/etc/profile",
-  "file:/bin/cp",
-  "file:/kii/"
+  "file:/bin/cp"
 ]
 
 sgx.allowed_files = [
