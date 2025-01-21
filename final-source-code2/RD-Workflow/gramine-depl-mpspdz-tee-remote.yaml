@@ -21,7 +21,7 @@ spec:
         effect: "NoSchedule"
       containers:
       - name: gramine-mpspdz-tee
-        image: ghcr.io/datakaveri/gramine-base:mpspdz-tee-a72d129
+        image: ghcr.io/datakaveri/gramine-base:mpspdz-tee-9bb493e
         imagePullPolicy: Always
         command: [ "/bin/bash", "-c", "--" ]
         args: [ "gramine-sgx-gen-private-key; while true; do sleep 30; done;" ]
