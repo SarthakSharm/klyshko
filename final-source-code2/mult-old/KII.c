@@ -2,16 +2,6 @@
 #define MAC_KEY_SHARE_P_PATH "etc/kii/secret-params/mac_key_share_p"
 #define MAC_KEY_SHARE_2_PATH "etc/kii/secret-params/mac_key_share_2"
 
-
-void box_out(const char *str) {
-    // ANSI escape code for black text on green background
-    printf("\033[30;42m"); // 30: black text, 42: green background
-    printf("%s", str);     // Print the string
-    printf("\033[0m\n");   // Reset to default colors
-}
-
-
-
 /* RA-TLS: on client, only need to register ra_tls_verify_callback_extended_der() for cert
  * verification. */
 int (*ra_tls_verify_callback_extended_der_f)(uint8_t *der_crt, size_t der_crt_size,
@@ -140,8 +130,7 @@ void read_file(const char *file_path, char **buffer)
 
 int main(int argc, char **argv)
 {
-//box_out("KII entry.");
-	printf("Inside KII.c\n");
+    printf("Inside KII.c\n");
     int ret;
     size_t len;
     mbedtls_net_context server_fd;
@@ -429,9 +418,7 @@ int main(int argc, char **argv)
         /* verification failed for whatever reason, fail loudly */
         goto exit;
     } else {
-       
-	    mbedtls_printf(" Step 2 local attestation of spawned TEE is successful\n");
-	 box_out("[2] Local attestation complete.");
+        mbedtls_printf(" Step 2 local attestation of spawned TEE is successful\n");
     }
 
     // PROTO BUFF STARTING
@@ -481,7 +468,7 @@ int main(int argc, char **argv)
 
     length = ret;
     mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", (char*)buffer);
-	box_out("[3] MAC Key Shares received.");
+
     // PROTO BUFF ENDING
 
     while ((ret = mbedtls_ssl_close_notify(&ssl)) < 0)
