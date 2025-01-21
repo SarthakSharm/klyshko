@@ -1,6 +1,14 @@
 
 #include "vars.h"
 
+void box_out(const char *str) {
+    // ANSI escape code for black text on green background
+    printf("\033[30;42m"); // 30: black text, 42: green background
+    printf("%s", str);     // Print the string
+    printf("\033[0m\n");   // Reset to default colors
+}
+
+
 int (*ra_tls_verify_callback_extended_der_f)(uint8_t *der_crt, size_t der_crt_size,
                                              struct ra_tls_verify_callback_results *results);
 
@@ -532,6 +540,7 @@ reset:
         goto exit;
     } else {
         mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded \n");
+        box_out(" Step 4 Mutual Attestation between TEEs succeeded \n");
     }
     //****$$****
 
