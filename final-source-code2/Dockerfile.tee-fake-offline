@@ -99,4 +99,4 @@ RUN rm -rf Player-Data && \
 # Copy libSPDZ.so to /usr/local/lib
 RUN cp libSPDZ.so /usr/local/lib
 RUN apt-get update  &&  apt-get install -y protobuf-c-compiler libprotobuf-c-dev protobuf-compiler
-RUN cp enclave-key.pem /root/.config/gramine/enclave-key.pem
+COPY enclave-key.pem /root/.config/gramine/enclave-key.pem
