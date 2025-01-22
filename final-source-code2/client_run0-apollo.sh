@@ -96,9 +96,9 @@ echo "Starting player $KII_PLAYER_NUMBER $KII_PLAYER_NAME with enclave mr_enclav
 
 box_out "[1] Spawning TEE.."
 
-gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 2>&1 | tee "player_${KII_PLAYER_NUMBER}.log"  &
+gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0    &
 server_pid=$!
-./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER 2>&1 | tee "kii_${KII_PLAYER_NUMBER}.log" &
+./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER  &
 
 #./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER &
 
