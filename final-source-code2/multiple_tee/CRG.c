@@ -317,7 +317,7 @@ int main(int argc, char **argv)
     create_mac_key_shares(player_count, player_number, Player_MAC_Keys_p, Player_MAC_Keys_2);
     printf("Step 7: Running Fake Offline as execvp process");
     box_out("[7] Running Fake Offline.\n");
-
+    fflush(stdout);
     char *args[] = {
         "../Fake-Offline.x",
         "-d",

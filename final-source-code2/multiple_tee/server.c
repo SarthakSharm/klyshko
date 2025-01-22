@@ -741,7 +741,7 @@ exit:
         mbedtls_printf("Last error was: %d - %s\n\n", ret, error_buf);
     }
 #endif
-
+    fflush(stdout);
     if (ra_tls_attest_lib)
         dlclose(ra_tls_attest_lib);
 
