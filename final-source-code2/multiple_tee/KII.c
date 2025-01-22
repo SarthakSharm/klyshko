@@ -2,7 +2,12 @@
 #define MAC_KEY_SHARE_P_PATH "etc/kii/secret-params/mac_key_share_p"
 #define MAC_KEY_SHARE_2_PATH "etc/kii/secret-params/mac_key_share_2"
 
-
+void box_out(const char *str) {
+    // ANSI escape code for black text on green background
+    mbedtls_printf("\033[30;42m"); // 30: black text, 42: green background
+    mbedtls_printf("%s", str);     // Print the string
+    mbedtls_printf("\033[0m\n");   // Reset to default colors
+}
 
 
 
