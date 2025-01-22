@@ -572,7 +572,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
         player_info__pack(&msg, buff);
         fprintf(stderr, "Step 5: Sending Player number and Job ID to player number %d \n", other_player_number);
-        box_out("[5] Job ID + Player number sent.\n")
+        box_out("[5] Job ID + Player number sent.\n");
         while ((ret = mbedtls_ssl_write(&ssl, buff, playlen)) <= 0)
         {
             if (ret == MBEDTLS_ERR_NET_CONN_RESET)
