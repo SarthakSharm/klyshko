@@ -607,7 +607,7 @@ reset:
         return ret;
     }
      printf(" Step 5 Other player number : %d  player number and Job ID is verified and correct\n", other_player_number);
-box_out("[5] Job ID + Player number received and verified.\n");
+     box_out("[5] Job ID + Player number received and verified.\n");
     // code for sending the macshares and seed values from the server to client side
     SecretShare secret_message = SECRET_SHARE__INIT;
     secret_message.mackeyshare_2 = Player_MAC_Keys_2[player_number_defined];

@@ -546,6 +546,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
             goto exit;
         } else {
             mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded\n");
+            box_out(" [4] Mutual Attestation between TEEs successful. \n");
         }
 
         fflush(stdout);
@@ -571,6 +572,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
         player_info__pack(&msg, buff);
         fprintf(stderr, "Step 5: Sending Player number and Job ID to player number %d \n", other_player_number);
+        box_out("[5] Job ID + Player number sent.\n")
         while ((ret = mbedtls_ssl_write(&ssl, buff, playlen)) <= 0)
         {
             if (ret == MBEDTLS_ERR_NET_CONN_RESET)
@@ -636,6 +638,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         printf(" Step 6: Received: mackeyshare_2=%s", secret_message->mackeyshare_2); // required field
         printf("  mackeyshare_p=%s", secret_message->mackeyshare_p);
         printf("  seeds=%s\n", secret_message->seeds);
+        box_out("[6] MAC Key Share + seed received from other player.\n");
 
         // code for packing the macshares and sending over the TLS dconnection again to the server
         SecretShare message = SECRET_SHARE__INIT;

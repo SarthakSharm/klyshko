@@ -49,7 +49,7 @@ EXTERN char* kii_job_id_defined;
     "<h2>mbed TLS Test Server</h2>\r\n"                  \
     "<p>Successful connection using: %s</p>\r\n"
 //***$$$***
-
+EXTERN void box_out(const char *str);
 EXTERN int ssl_client_setup_and_handshake();
 EXTERN int ssl_server_setup_and_handshake();
 // EXTERN void local_attestation();
