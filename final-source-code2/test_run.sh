@@ -53,8 +53,8 @@ if [ -z "$mr_enclave" ] || [ -z "$mr_signer" ]; then
 fi
 
 # Set required RA-TLS verification variables
-export RA_TLS_MRSIGNER="$mr_signer"  
-export RA_TLS_MRENCLAVE="$mr_enclave"            
+export RA_TLS_MRSIGNER="$mr_signer"
+export RA_TLS_MRENCLAVE="$mr_enclave"
 export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
@@ -63,14 +63,14 @@ for (( i = KII_PLAYER_COUNT - 1; i >= 0; i-- )); do
     echo "Starting server for player $i in the background (logging to player_${i}.log)..."
 
     # Export player-specific variables and start the player process in the background
-    (   
+    (
         export KII_PLAYER_NUMBER=$i
         export RA_TLS_ALLOW_DEBUG_ENCLAVE_INSECURE=1
         export RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1
         export RA_TLS_ALLOW_HW_CONFIG_NEEDED=1
         export RA_TLS_ALLOW_SW_HARDENING_NEEDED=1
         echo "Starting player $i with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${i}.log"
-        
+
         # Run the compiled executable for each player
         gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${i}.log" 2>&1 &
 

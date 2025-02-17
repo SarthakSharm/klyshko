@@ -1,7 +1,7 @@
 FROM gramineproject/gramine:1.7-jammy
-RUN apt update && apt install -y git make gcc  wget libsgx-dcap-ql libsgx-quote-ex libsgx-dcap-default-qpl pkg-config vim 
+RUN apt update && apt install -y git make gcc  wget libsgx-dcap-ql libsgx-quote-ex libsgx-dcap-default-qpl pkg-config vim
 ENV SGX_AESM_ADDR=1
-COPY azure_sgx_qcnl.conf /etc/sgx_default_qcnl.conf   
+COPY azure_sgx_qcnl.conf /etc/sgx_default_qcnl.conf
 
 ARG VERSION
 ARG ARTIFACT_NAME="spdz"

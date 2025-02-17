@@ -53,8 +53,8 @@ if [ -z "$mr_enclave" ] || [ -z "$mr_signer" ]; then
 fi
 
 # Set required RA-TLS verification variables
-export RA_TLS_MRSIGNER="$mr_signer"  
-export RA_TLS_MRENCLAVE="$mr_enclave"            
+export RA_TLS_MRSIGNER="$mr_signer"
+export RA_TLS_MRENCLAVE="$mr_enclave"
 export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
@@ -88,7 +88,7 @@ box_out "[0] Starting execution for player $KII_PLAYER_NUMBER $KII_PLAYER_NAME"
 
 
 echo "Starting player $KII_PLAYER_NUMBER $KII_PLAYER_NAME with enclave mr_enclave: $mr_enclave and mr_signer: $mr_signer" > "player_${KII_PLAYER_NUMBER}.log"
-        
+
 
 
 #gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0 >> "player_${KII_PLAYER_NUMBER}.log" 2>&1 &

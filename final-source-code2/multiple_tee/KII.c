@@ -428,7 +428,7 @@ int main(int argc, char **argv)
         /* verification failed for whatever reason, fail loudly */
         goto exit;
     } else {
-       
+
 	    mbedtls_printf(" Step 2 local attestation of spawned TEE is successful\n");
 	 box_out("[2] Local attestation complete.");
     }

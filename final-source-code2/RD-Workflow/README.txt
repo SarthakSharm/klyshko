@@ -6,8 +6,8 @@ In the R&D workflow, K8s will deploy a pod, containing all dependencies e.g. Mp-
 
 1. To deploy gramine based sgx tee for testing purposes with mutual attestation in a single container
  ```kubectl apply -f gramine-depl-mpspdz-tee.yaml```
-2. To deploy  gramine based sgx tee for end-to-end mutual remote attestation 
-    ``` kubectl apply -f gramine-depl-mpspdz-tee-remote.yaml 
+2. To deploy  gramine based sgx tee for end-to-end mutual remote attestation
+    ``` kubectl apply -f gramine-depl-mpspdz-tee-remote.yaml
          kubectl apply -f klyshko-lb-svc.yaml
     ```
 3. Copying source code into container for testing

@@ -157,7 +157,7 @@ char *addHex2(const char *hex1, const char *hex2)
 
 int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Player_MAC_Keys_p[],
                                    char* Player_MAC_Keys_2[], char* Seed) {
-    
+
 	//box_out("C entry point.\n");
 	printf("Player number %d acting as server \n", player_number_defined);
     int no_of_parameters = 5;
