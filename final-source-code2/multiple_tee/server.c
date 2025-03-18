@@ -1,13 +1,13 @@
 
 #include "vars.h"
 
-void box_out(const char *str) {
+void box_out(const char *str)
+{
     // ANSI escape code for black text on green background
     mbedtls_printf("\033[30;42m"); // 30: black text, 42: green background
     mbedtls_printf("%s", str);     // Print the string
     mbedtls_printf("\033[0m\n");   // Reset to default colors
 }
-
 
 int (*ra_tls_verify_callback_extended_der_f)(uint8_t *der_crt, size_t der_crt_size,
                                              struct ra_tls_verify_callback_results *results);
@@ -34,11 +34,11 @@ static int parse_hex(const char *hex, void *buffer, size_t buffer_size)
 int verify_player_details(char *kii_job_id, int received_other_player_number,
                           char *kii_job_id_defined, int other_player_number)
 {
-    printf("received kii_job_id: %s\n", kii_job_id);
-    printf("kii_job_id_defined: %s\n", kii_job_id_defined);
-    printf("strcmp result of job id: %d\n", strcmp(kii_job_id, kii_job_id_defined));
-    printf("received_other_player_number: %d\n", received_other_player_number);
-    printf("other_player_number: %d\n", other_player_number);
+    // printf("received kii_job_id: %s\n", kii_job_id);
+    // printf("kii_job_id_defined: %s\n", kii_job_id_defined);
+    // printf("strcmp result of job id: %d\n", strcmp(kii_job_id, kii_job_id_defined));
+    // printf("received_other_player_number: %d\n", received_other_player_number);
+    // printf("other_player_number: %d\n", other_player_number);
     if (strcmp(kii_job_id, kii_job_id_defined) == 0 &&
         received_other_player_number == other_player_number)
     {
@@ -155,11 +155,12 @@ char *addHex2(const char *hex1, const char *hex2)
     return result;
 }
 
-int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Player_MAC_Keys_p[],
-                                   char* Player_MAC_Keys_2[], char* Seed) {
+int ssl_server_setup_and_handshake(char *a, char *b, char *c, char *d, char *Player_MAC_Keys_p[],
+                                   char *Player_MAC_Keys_2[], char *Seed)
+{
 
-	//box_out("C entry point.\n");
-	printf("Player number %d acting as server \n", player_number_defined);
+    // box_out("C entry point.\n");
+    printf("Player number %d acting as server \n", player_number_defined);
     int no_of_parameters = 5;
     int ret;
     size_t len;
@@ -320,7 +321,8 @@ int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
     }
 
     mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
-    if (ra_tls_verify_lib) {
+    if (ra_tls_verify_lib)
+    {
         /* use RA-TLS verification callback; this will overwrite CA chain set up above */
         mbedtls_printf("  . Installing RA-TLS callback ...");
         mbedtls_ssl_conf_verify(&conf, &my_verify_callback, &my_verify_callback_results);
@@ -431,7 +433,7 @@ int ssl_server_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
     //***$$$***
 
-    mbedtls_printf("  . Bind on https://%s:%s/ ...",server_ip,server_port);
+    mbedtls_printf("  . Bind on https://%s:%s/ ...", server_ip, server_port);
     fflush(stdout);
 
     ret = mbedtls_net_bind(&listen_fd, NULL, server_port, MBEDTLS_NET_PROTO_TCP);
@@ -540,7 +542,9 @@ reset:
 
         /* verification failed for whatever reason, fail loudly */
         goto exit;
-    } else {
+    }
+    else
+    {
         mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded \n");
         box_out(" [4] Mutual Attestation between TEEs successful. \n");
     }
@@ -593,7 +597,6 @@ reset:
         fprintf(stderr, "Error unpacking incoming message\n");
     }
 
-
     ret = verify_player_details(msg->kii_job_id, msg->player_number, kii_job_id_defined,
                                 other_player_number);
     if (ret == -1)
@@ -606,8 +609,8 @@ reset:
         }
         return ret;
     }
-     printf(" Step 5 Other player number : %d  player number and Job ID is verified and correct\n", other_player_number);
-     box_out("[5] Job ID + Player number received and verified.\n");
+    printf(" Step 5 Other player number : %d  player number and Job ID is verified and correct\n", other_player_number);
+    box_out("[5] Job ID + Player number received and verified.\n");
     // code for sending the macshares and seed values from the server to client side
     SecretShare secret_message = SECRET_SHARE__INIT;
     secret_message.mackeyshare_2 = Player_MAC_Keys_2[player_number_defined];
@@ -694,7 +697,7 @@ reset:
 
     // Display the message's fields
     box_out("[6] MAC Key Share + seed received from other player.\n");
-    printf("Step 6 : Mac key and seed share received from player number %d : mackeyshare_2=%s", other_player_number, message->mackeyshare_2);  // required field
+    printf("Step 6 : Mac key and seed share received from player number %d : mackeyshare_2=%s", other_player_number, message->mackeyshare_2); // required field
     printf("  seeds=%s\n", message->seeds);
 
     // // perform operations
@@ -729,10 +732,10 @@ reset:
     other_player_number++;
     goto reset;
 
-    printf("final ret: %d\n", ret);
+    // printf("final ret: %d\n", ret);
 
 exit:
-    printf("final ret after exit: %d\n", ret);
+    // printf("final ret after exit: %d\n", ret);
 #ifdef MBEDTLS_ERROR_C
     if (ret != 0)
     {

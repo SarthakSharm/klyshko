@@ -2,14 +2,13 @@
 #define MAC_KEY_SHARE_P_PATH "etc/kii/secret-params/mac_key_share_p"
 #define MAC_KEY_SHARE_2_PATH "etc/kii/secret-params/mac_key_share_2"
 
-void box_out(const char *str) {
+void box_out(const char *str)
+{
     // ANSI escape code for black text on green background
     mbedtls_printf("\033[30;42m"); // 30: black text, 42: green background
     mbedtls_printf("%s", str);     // Print the string
     mbedtls_printf("\033[0m\n");   // Reset to default colors
 }
-
-
 
 /* RA-TLS: on client, only need to register ra_tls_verify_callback_extended_der() for cert
  * verification. */
@@ -139,8 +138,8 @@ void read_file(const char *file_path, char **buffer)
 
 int main(int argc, char **argv)
 {
-//box_out("KII entry.");
-	printf("Inside KII.c\n");
+    // box_out("KII entry.");
+    //  printf("Inside KII.c\n");
     int ret;
     size_t len;
     mbedtls_net_context server_fd;
@@ -349,7 +348,7 @@ int main(int argc, char **argv)
         goto exit;
     }
 
-    mbedtls_printf(" ok\n");
+    // mbedtls_printf(" ok\n");
 
     fflush(stdout);
 
@@ -427,11 +426,15 @@ int main(int argc, char **argv)
 
         /* verification failed for whatever reason, fail loudly */
         goto exit;
-    } else {
-
-	    mbedtls_printf(" Step 2 local attestation of spawned TEE is successful\n");
-	 box_out("[2] Local attestation complete.");
     }
+    else
+    {
+
+        mbedtls_printf(" Step 2 local attestation of spawned TEE is successful\n");
+        box_out("[2] Local attestation complete.");
+    }
+
+    mbedtls_printf(" ok\n");
 
     // PROTO BUFF STARTING
     // code for packing the macshares and sending over the TLS dconnection again to the server
@@ -479,8 +482,8 @@ int main(int argc, char **argv)
     // EOC for sending
 
     length = ret;
-    mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", (char*)buffer);
-	box_out("[3] MAC Key Shares received.");
+    mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", (char *)buffer);
+    box_out("[3] MAC Key Shares received.");
     // PROTO BUFF ENDING
 
     while ((ret = mbedtls_ssl_close_notify(&ssl)) < 0)

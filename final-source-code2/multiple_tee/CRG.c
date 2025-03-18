@@ -164,7 +164,7 @@ void create_mac_key_shares(int pc, int pn, char *Player_MAC_Keys_p[], char *Play
                 macKeyShare = Player_MAC_Keys_2[playerNumber];
             }
 
-            printf("%s\n", macKeyShare);
+            // printf("%s\n", macKeyShare);
 
             char dataToWrite[256];
 
@@ -180,7 +180,7 @@ void create_mac_key_shares(int pc, int pn, char *Player_MAC_Keys_p[], char *Play
 
 int main(int argc, char **argv)
 {
-    printf("Entered the CRG main function.\n\n");
+    // printf("Entered the CRG main function.\n\n");
 
     int ret;
     int other_player_number = 0;
@@ -221,7 +221,7 @@ int main(int argc, char **argv)
     char *b_port = env_values[7];
     // Convert to integers
     kii_job_id_defined = kii_job_id_str; // Check for NULL
-    printf("kii_job_id_defined: %s\n", kii_job_id_defined);
+    // printf("kii_job_id_defined: %s\n", kii_job_id_defined);
     player_number_defined = player_number_str ? atoi(player_number_str) : 0;
     number_of_players = number_of_players_str ? atoi(number_of_players_str) : 0;
     base_port = b_port ? atoi(b_port) : 0;
@@ -246,7 +246,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("ok\n");
+    // printf("ok\n");
 
     // ***$$$***
 
@@ -291,7 +291,6 @@ int main(int argc, char **argv)
         if (ret != 0)
             exit(ret);
     }
-
 
     printf("End of Remote attestation..\n");
 

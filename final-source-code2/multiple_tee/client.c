@@ -128,8 +128,9 @@ char *addHex(const char *hex1, const char *hex2)
     return result;
 }
 
-int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Player_MAC_Keys_p[],
-                                   char* Player_MAC_Keys_2[], char* Seed) {
+int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Player_MAC_Keys_p[],
+                                   char *Player_MAC_Keys_2[], char *Seed)
+{
     printf("Player number %d  acting as client\n", player_number_defined);
     int no_of_parameters = 5;
     int ret;
@@ -544,7 +545,9 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
 
             /* verification failed for whatever reason, fail loudly */
             goto exit;
-        } else {
+        }
+        else
+        {
             mbedtls_printf(" Step 4 Mutual Attestation between TEEs succeeded\n");
             box_out(" [4] Mutual Attestation between TEEs successful. \n");
         }
@@ -674,7 +677,7 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
             }
         }
         // EOC for sending
-        printf("Step 6: Sent  Mac and Seed Share to player number %d",other_player_number);
+        printf("Step 6: Sent  Mac and Seed Share to player number %d", other_player_number);
         // Perform operations
         // Seed = addHex(Seed, secret_message->seeds);
         memcpy(Seed, addHex(Seed, secret_message->seeds), KEY_LENGTH);
@@ -696,10 +699,10 @@ int ssl_client_setup_and_handshake(char* a, char* b, char* c, char* d, char* Pla
         //***$$$****
     }
 
-    printf("final ret: %d\n", ret);
+    // printf("final ret: %d\n", ret);
 
 exit:
-    printf("final ret after exit: %d\n", ret);
+    // printf("final ret after exit: %d\n", ret);
 #ifdef MBEDTLS_ERROR_C
     if (ret != 0)
     {
