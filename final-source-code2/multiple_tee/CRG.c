@@ -120,11 +120,11 @@ void writeFile(const char *filename, const char *text)
     }
     else
     {
-        perror("opened successfully");
+        // perror("opened successfully");
     }
 
     // Write the text to the file
-    fprintf(file, "%s", text);
+    // fprintf(file, "%s", text);
 
     // Close the file
     fclose(file);
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     // char* n = "10000";
 
     get_random_hex(Seed, 16);
-    printf("Getting environment variables ...");
+    printf("Getting environment variables ...\n");
     const char *env_names[] = {"KII_TUPLES_PER_JOB", "KII_SHARED_FOLDER", "KII_TUPLE_FILE",
                                "KII_PLAYER_NUMBER", "KII_PLAYER_COUNT", "KII_JOB_ID",
                                "KII_TUPLE_TYPE", "BASE_PORT"};
@@ -238,7 +238,7 @@ int main(int argc, char **argv)
         kii_endpoints[i] = getenv(env_kii_name);
         if (kii_endpoints[i] != NULL)
         {
-            printf("Player %d endpoint: %s", i, kii_endpoints[i]);
+            printf("Player %d endpoint: %s\n", i, kii_endpoints[i]);
         }
         else
         {
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("Local attestation starts . . .");
+    printf("Local attestation starts . . .\n");
     ret = local_attestation(Player_MAC_Keys_p, Player_MAC_Keys_2);
     if (ret != 0)
         exit(ret);

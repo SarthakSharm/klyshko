@@ -2,16 +2,16 @@
 
 if [ -f "kii_0.log" ]; then
     rm "kii_0.log"
-    echo "File removed successfully."
+    # echo "File removed successfully."
 else
-    echo "File does not exist."
+    # echo "File does not exist."
 fi
 
 if [ -f "kii_1.log" ]; then
     rm "kii_1.log"
-    echo "File removed successfully."
+    # echo "File removed successfully."
 else
-    echo "File does not exist."
+    # echo "File does not exist."
 fi
 
 rm -r Player-Data
@@ -40,7 +40,7 @@ output=$(gramine-sgx-sigstruct-view server.sig)
 mr_enclave=$(echo "$output" | grep "mr_enclave" | awk '{print $2}')
 mr_signer=$(echo "$output" | grep "mr_signer" | awk '{print $2}')
 
-echo "mr_enclave: $mr_enclave, mr_signer: $mr_signer, i: $i"
+# echo "mr_enclave: $mr_enclave, mr_signer: $mr_signer, i: $i"
 
 # output=$(gramine-sgx-sigstruct-view server.sig)
 # mr_enclave=$(echo "$output" | grep "mr_enclave" | awk '{print $2}')

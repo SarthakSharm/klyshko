@@ -295,8 +295,8 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
     memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, KEY_LENGTH);
     memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, KEY_LENGTH);
 
-    printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]); // required field
-    printf("  mackeyshare_p=%s\n", Player_MAC_Keys_p[player_number_defined]);
+    // printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]); // required field
+    // printf("  mackeyshare_p=%s\n", Player_MAC_Keys_p[player_number_defined]);
 
     // Free the unpacked message
     secret_share__free_unpacked(message, NULL);

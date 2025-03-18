@@ -482,7 +482,7 @@ int main(int argc, char **argv)
     // EOC for sending
 
     length = ret;
-    mbedtls_printf(" Step 3 MAC key shares shared to TEE \n\n%s\n", (char *)buffer);
+    mbedtls_printf(" Step 3 MAC key shares shared to TEE\n");
     box_out("[3] MAC Key Shares received.");
     // PROTO BUFF ENDING
 

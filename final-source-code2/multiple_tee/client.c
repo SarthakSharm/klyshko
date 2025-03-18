@@ -457,7 +457,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
             goto exit;
         }
 
-        mbedtls_printf(" ok\n");
+        // mbedtls_printf(" ok\n");
 
         fflush(stdout);
 
@@ -624,7 +624,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
             }
 
             secret_len = ret;
-            mbedtls_printf(" %ld bytes read %s\n", secret_len, (char *)secret_buffer);
+            mbedtls_printf(" %ld bytes read \n", secret_len);
 
             if (ret > 0)
                 break;
@@ -638,9 +638,9 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         }
 
         // Display the message's fields
-        printf(" Step 6: Received: mackeyshare_2=%s", secret_message->mackeyshare_2); // required field
-        printf("  mackeyshare_p=%s", secret_message->mackeyshare_p);
-        printf("  seeds=%s\n", secret_message->seeds);
+        // printf(" Step 6: Received: mackeyshare_2=%s", secret_message->mackeyshare_2); // required field
+        // printf("  mackeyshare_p=%s", secret_message->mackeyshare_p);
+        // printf("  seeds=%s\n", secret_message->seeds);
         box_out("[6] MAC Key Share + seed received from other player.\n");
 
         // code for packing the macshares and sending over the TLS dconnection again to the server
@@ -681,7 +681,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         // Perform operations
         // Seed = addHex(Seed, secret_message->seeds);
         memcpy(Seed, addHex(Seed, secret_message->seeds), KEY_LENGTH);
-        printf("ADDED SEED IS : %s\n", Seed);
+        // printf("ADDED SEED IS : %s\n", Seed);
         memcpy(Player_MAC_Keys_p[other_player_number], secret_message->mackeyshare_p, KEY_LENGTH);
         memcpy(Player_MAC_Keys_2[other_player_number], secret_message->mackeyshare_2, KEY_LENGTH);
         // Free the unpacked message

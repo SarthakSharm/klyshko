@@ -645,7 +645,7 @@ reset:
     }
 
     lenth = ret;
-    mbedtls_printf(" %d bytes written\n\n%s\n", lenth, (char *)secret_buffer);
+    mbedtls_printf(" %d bytes written\n", lenth);
 
     fflush(stdout);
 
@@ -698,7 +698,7 @@ reset:
     // Display the message's fields
     box_out("[6] MAC Key Share + seed received from other player.\n");
     printf("Step 6 : Mac key and seed share received from player number %d : mackeyshare_2=%s", other_player_number, message->mackeyshare_2); // required field
-    printf("  seeds=%s\n", message->seeds);
+    // printf("  seeds=%s\n", message->seeds);
 
     // // perform operations
     // char *temp = malloc(strlen(Seed) + 1); // +1 for the null terminator
@@ -710,7 +710,7 @@ reset:
     // strcpy(temp, Seed);
     // Seed = addHex2(Seed, message->seeds);
     memcpy(Seed, addHex2(Seed, message->seeds), KEY_LENGTH);
-    printf("ADDED SEED IS : %s\n", Seed);
+    // printf("ADDED SEED IS : %s\n", Seed);
 
     memcpy(Player_MAC_Keys_p[other_player_number], message->mackeyshare_p, KEY_LENGTH);
     memcpy(Player_MAC_Keys_2[other_player_number], message->mackeyshare_2, KEY_LENGTH);
