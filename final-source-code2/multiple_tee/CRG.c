@@ -120,12 +120,12 @@ void writeFile(const char *filename, const char *text)
     }
     else
     {
-        perror("opened successfully");
+        // perror("opened successfully");
     }
 
     // Write the text to the file
     fprintf(file, "%s", text);
-
+    
     // Close the file
     fclose(file);
 }
@@ -164,7 +164,7 @@ void create_mac_key_shares(int pc, int pn, char *Player_MAC_Keys_p[], char *Play
                 macKeyShare = Player_MAC_Keys_2[playerNumber];
             }
 
-            printf("%s\n", macKeyShare);
+            // printf("%s\n", macKeyShare);
 
             char dataToWrite[256];
 
@@ -180,7 +180,7 @@ void create_mac_key_shares(int pc, int pn, char *Player_MAC_Keys_p[], char *Play
 
 int main(int argc, char **argv)
 {
-    printf("Entered the CRG main function.\n\n");
+    // printf("Entered the CRG main function.\n\n");
 
     int ret;
     int other_player_number = 0;
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     // char* n = "10000";
 
     get_random_hex(Seed, 16);
-    printf("Getting environment variables ...");
+    printf("Getting environment variables ...\n");
     const char *env_names[] = {"KII_TUPLES_PER_JOB", "KII_SHARED_FOLDER", "KII_TUPLE_FILE",
                                "KII_PLAYER_NUMBER", "KII_PLAYER_COUNT", "KII_JOB_ID",
                                "KII_TUPLE_TYPE", "BASE_PORT"};
@@ -221,7 +221,7 @@ int main(int argc, char **argv)
     char *b_port = env_values[7];
     // Convert to integers
     kii_job_id_defined = kii_job_id_str; // Check for NULL
-    printf("kii_job_id_defined: %s\n", kii_job_id_defined);
+    // printf("kii_job_id_defined: %s\n", kii_job_id_defined);
     player_number_defined = player_number_str ? atoi(player_number_str) : 0;
     number_of_players = number_of_players_str ? atoi(number_of_players_str) : 0;
     base_port = b_port ? atoi(b_port) : 0;
@@ -238,7 +238,7 @@ int main(int argc, char **argv)
         kii_endpoints[i] = getenv(env_kii_name);
         if (kii_endpoints[i] != NULL)
         {
-            printf("Player %d endpoint: %s", i, kii_endpoints[i]);
+            printf("Player %d endpoint: %s\n", i, kii_endpoints[i]);
         }
         else
         {
@@ -246,7 +246,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("ok\n");
+    // printf("ok\n");
 
     // ***$$$***
 
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("Local attestation starts . . .");
+    printf("Local attestation starts . . .\n");
     ret = local_attestation(Player_MAC_Keys_p, Player_MAC_Keys_2);
     if (ret != 0)
         exit(ret);
@@ -291,7 +291,6 @@ int main(int argc, char **argv)
         if (ret != 0)
             exit(ret);
     }
-
 
     printf("End of Remote attestation..\n");
 

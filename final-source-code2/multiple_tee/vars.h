@@ -58,8 +58,3 @@ EXTERN char** kii_endpoints;
 EXTERN int base_port;
 
 #define KEY_LENGTH 128
-// EXTERN void my_debug(void* ctx, int level, const char* file, int line, const char* str);
-// EXTERN int verify_player_details(char* kii_job_id, int player_number, char*
-// kii_job_id_defined,
-//                                  int player_number_defined);
-// EXTERN int my_verify_callback(void* data, mbedtls_x509_crt* crt, int depth, uint32_t* flags);

@@ -31,7 +31,7 @@ static ssize_t file_read(const char *path, char *buf, size_t count)
 
 int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
 {
-    printf("Inside local attestation function\n");
+    // printf("Inside local attestation function\n");
     int ret;
     size_t len;
     mbedtls_net_context listen_fd;
@@ -240,6 +240,8 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
         }
     }
 
+    mbedtls_printf(" ok\n");
+
     mbedtls_printf(" Step 2 local attestation is successful\n");
 
     // PROTOBUFF STARTING - UNPACKING OF DATA
@@ -287,15 +289,14 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
         fprintf(stderr, "Error unpacking incoming message\n");
     }
 
-
     printf(" Step 3 Recieved the Mac shares from KII \n");
     // Player_MAC_Keys_p[player_number_defined] = message->mackeyshare_p;
     // Player_MAC_Keys_2[player_number_defined] = message->mackeyshare_2;
     memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, KEY_LENGTH);
     memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, KEY_LENGTH);
 
-    printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]); // required field
-    printf("  mackeyshare_p=%s\n", Player_MAC_Keys_p[player_number_defined]);
+    // printf("mackeyshare_2=%s", Player_MAC_Keys_2[player_number_defined]); // required field
+    // printf("  mackeyshare_p=%s\n", Player_MAC_Keys_p[player_number_defined]);
 
     // Free the unpacked message
     secret_share__free_unpacked(message, NULL);
@@ -315,10 +316,10 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
 
     mbedtls_printf(" ok\n");
 
-    printf("final ret: %d\n", ret);
+    // printf("final ret: %d\n", ret);
 
 exit:
-    printf("final ret after exit: %d\n", ret);
+    // printf("final ret after exit: %d\n", ret);
 #ifdef MBEDTLS_ERROR_C
     if (ret != 0)
     {
