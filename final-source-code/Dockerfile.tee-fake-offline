@@ -36,8 +36,11 @@ RUN set -uex \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/carbynestack/MP-SPDZ mp-spdz-${ARTIFACT_TAG} && \
-  ln -s mp-spdz-${ARTIFACT_TAG} ${USER_HOME}
+RUN git clone https://github.com/data61/MP-SPDZ.git mp-spdz-${ARTIFACT_TAG} && \
+    cd mp-spdz-${ARTIFACT_TAG} && \
+    git checkout ${ARTIFACT_TAG} && \
+    ln -s mp-spdz-${ARTIFACT_TAG} ${USER_HOME}
+
 
 WORKDIR ${USER_HOME}
 
@@ -100,3 +103,19 @@ RUN rm -rf Player-Data && \
 RUN cp libSPDZ.so /usr/local/lib
 RUN apt-get update  &&  apt-get install -y protobuf-c-compiler libprotobuf-c-dev protobuf-compiler
 COPY enclave-key.pem /root/.config/gramine/enclave-key.pem
+COPY . .
+RUN chmod +x kii-run.sh
+
+RUN make app RA_TYPE=dcap
+RUN output=$(gramine-sgx-sigstruct-view server.sig)
+
+# Extract values and set as environment variables
+RUN output=$(gramine-sgx-sigstruct-view server.sig) && \
+    echo "mr_enclave=$(echo \"$output\" | awk -F'mr_enclave: ' '{print $2}' | awk '{print $1}')" >> /etc/environment && \
+    echo "mr_signer=$(echo \"$output\" | awk -F'mr_signer: ' '{print $2}' | awk '{print $1}')" >> /etc/environment
+
+# Ensure environment variables are loaded
+RUN echo "source /etc/environment" >> ~/.bashrc
+
+# Run the kii-run script
+ENTRYPOINT ["/bin/bash", "-c", "./kii-run.sh"]

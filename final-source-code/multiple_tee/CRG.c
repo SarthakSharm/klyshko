@@ -125,7 +125,7 @@ void writeFile(const char *filename, const char *text)
 
     // Write the text to the file
     fprintf(file, "%s", text);
-    
+
     // Close the file
     fclose(file);
 }

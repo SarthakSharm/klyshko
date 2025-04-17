@@ -1,5 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+set -e
 if [ -f "kii_0.log" ]; then
     rm "kii_0.log"
 fi
@@ -8,26 +8,11 @@ if [ -f "kii_1.log" ]; then
     rm "kii_1.log"
 fi
 
-rm -r Player-Data
-mkdir Player-Data
-cd Player-Data
-mkdir 2-2-40
-mkdir 2-p-128
-cd ..
-
 # Configuration Variables
-export KII_TUPLES_PER_JOB="100000"
-export KII_SHARED_FOLDER="/kii"
-export KII_TUPLE_FILE="/kii/tuples"
-export KII_PLAYER_COUNT="2"
-export KII_JOB_ID="1920bb26-dsee-dzfw-vdsdsa14fds4"
-export KII_TUPLE_TYPE="BIT_GFP"
-export KII_PLAYER_ENDPOINT_1="4.224.102.120:5000"
-export KII_PLAYER_ENDPOINT_0="4.188.114.199:5000"
 export BASE_PORT="4433"
 
 # Run make with SGX and RA_TYPE as build variables
-make app RA_TYPE=dcap
+# make app RA_TYPE=dcap
 
 # Retrieve mr_enclave and mr_signer values from server.sig
 output=$(gramine-sgx-sigstruct-view server.sig)
@@ -52,8 +37,15 @@ export RA_TLS_MRENCLAVE="$mr_enclave"
 export RA_TLS_ISV_SVN="any"
 export RA_TLS_ISV_PROD_ID="any"
 
-export KII_PLAYER_NUMBER=0
-export KII_PLAYER_NAME="APOLLO"
+if [ "$KII_PLAYER_NUMBER" -eq 0 ]; then
+    export KII_PLAYER_NAME="APOLLO"
+elif [ "$KII_PLAYER_NUMBER" -eq 1 ]; then
+    export KII_PLAYER_NAME="STARBUCK"
+else
+    echo "Error: Invalid KII_PLAYER_NUMBER. Must be 0 or 1."
+    exit 1
+fi
+
 export RA_TLS_ALLOW_DEBUG_ENCLAVE_INSECURE=1
 export RA_TLS_ALLOW_OUTDATED_TCB_INSECURE=1
 export RA_TLS_ALLOW_HW_CONFIG_NEEDED=1
