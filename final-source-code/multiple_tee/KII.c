@@ -1,6 +1,6 @@
 #include "vars.h"
-#define MAC_KEY_SHARE_P_PATH "etc/kii/secret-params/mac_key_share_p"
-#define MAC_KEY_SHARE_2_PATH "etc/kii/secret-params/mac_key_share_2"
+#define MAC_KEY_SHARE_P_PATH "/etc/kii/secret-params/mac_key_share_p"
+#define MAC_KEY_SHARE_2_PATH "/etc/kii/secret-params/mac_key_share_2"
 
 void box_out(const char *str)
 {

@@ -81,5 +81,8 @@ sgx.allowed_files = [
   "file:/etc/bash.bashrc",
   "file:/etc/profile",
   "file:/bin/cp",
-  "file:/kii/"
+  "file:/kii/",
+  "file:/etc/kii/params/prime",
+  "file:/etc/kii/secret-params/mac_key_share_p",
+  "file:/etc/kii/secret-params/mac_key_share_2"
 ]

@@ -178,18 +178,56 @@ void create_mac_key_shares(int pc, int pn, char *Player_MAC_Keys_p[], char *Play
     }
 }
 
+void read_file(const char *file_path, char **buffer)
+{
+    FILE *file = fopen(file_path, "r");
+    if (!file)
+    {
+        fprintf(stderr, "Error: Could not open file %s\n", file_path);
+        exit(EXIT_FAILURE);
+    }
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    if (file_size < 0)
+    {
+        fprintf(stderr, "Error: Failed to determine file size for %s\n", file_path);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+    rewind(file);
+
+    *buffer = (char *)malloc(file_size + 1);
+    if (!*buffer)
+    {
+        fprintf(stderr, "Error: Memory allocation failed for file buffer\n");
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+
+    size_t bytes_read = fread(*buffer, 1, file_size, file);
+    if (bytes_read != file_size)
+    {
+        fprintf(stderr,
+                "Error: Could not read the full file %s (expected %ld bytes, got %zu bytes)\n",
+                file_path, file_size, bytes_read);
+        free(*buffer);
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+
+    (*buffer)[file_size] = '\0'; // Null-terminate the buffer
+    fclose(file);
+}
+
 int main(int argc, char **argv)
 {
     // printf("Entered the CRG main function.\n\n");
 
     int ret;
     int other_player_number = 0;
-    char *prime = "198766463529478683931867765928436695041";
-    // char* Player_MAC_Keys_p[2] = {"-88222337191559387830816715872691188862",
-    //                               "1113507028231509545156335486838233832"};
-    // char* Player_MAC_Keys_2[2] = {"f0cf6099e629fd0bda2de3f9515ab722",
-    //                               "c347ce3d9e165e4e85221f9da7591d92"};
-
+    char *prime = NULL;
+    read_file("/etc/kii/params/prime", &prime);
     char Seed[17];
     // char* n = "10000";
 
