@@ -6,21 +6,23 @@ FROM golang:1.16 as builder
 ARG RELEASE_PAGE="https://github.com/carbynestack/klyshko/releases"
 
 WORKDIR /workspace
-# Copy the Go Modules manifests
-COPY go.mod go.mod
-COPY go.sum go.sum
-# cache deps before building and copying source so that we don't need to re-download as much
-# and so that source changes don't invalidate our downloaded layer
+# Copy go.mod and go.sum to leverage Docker cache.
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the go source
-COPY main.go main.go
-COPY api/ api/
-COPY castor/ castor/
-COPY controllers/ controllers/
-COPY logging/ logging/
+# Copy the full source tree.
+COPY . .
 
-# Build
+# Ensure the 'bin' folder exists so that controller-gen and other tools are placed there.
+RUN mkdir -p bin
+
+# Download the controller-gen binary.
+RUN make controller-gen
+
+# Generate deep copy methods and CRD manifests.
+RUN make generate manifests
+
+# Build the operator binary.
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o manager main.go
 
 # Use compliant base image from carbynestack/base-images

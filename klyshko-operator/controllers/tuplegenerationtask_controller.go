@@ -555,6 +555,12 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 		},
 		Spec: v1.PodSpec{
 			Affinity: podSpecTemplate.Spec.Affinity,
+			Tolerations: append(podSpecTemplate.Spec.Tolerations, v1.Toleration{
+				Key:      "kubernetes.azure.com/scalesetpriority",
+				Operator: v1.TolerationOpEqual,
+				Value:    "spot",
+				Effect:   v1.TaintEffectNoSchedule,
+			}),
 			Containers: []v1.Container{
 				{
 					Name:            "generator",
@@ -619,6 +625,11 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 							ReadOnly:  true,
 							MountPath: "/etc/kii/extra-params",
 						},
+						{
+							Name:      "var-run-aesmd",
+							MountPath: "/var/run/aesmd",
+						},
+						
 					},
 				},
 			},
@@ -660,6 +671,15 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 						},
 					},
 				},
+				{
+					Name: "var-run-aesmd",
+					VolumeSource: v1.VolumeSource{
+						HostPath: &v1.HostPathVolumeSource{
+							Path: "/var/run/aesmd",
+						},
+					},
+				},
+				
 			},
 		},
 	}
@@ -692,6 +712,9 @@ func (r *TupleGenerationTaskReconciler) getOrCreateService(ctx context.Context, 
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name.Name,
 			Namespace: name.Namespace,
+			Annotations: map[string]string{
+				"service.beta.kubernetes.io/port_5000_no_probe_rule": "true",
+			},
 		},
 		Spec: v1.ServiceSpec{
 			Ports: []v1.ServicePort{
