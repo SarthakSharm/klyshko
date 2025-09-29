@@ -555,18 +555,25 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 		},
 		Spec: v1.PodSpec{
 			Affinity: podSpecTemplate.Spec.Affinity,
-			Tolerations: append(podSpecTemplate.Spec.Tolerations, v1.Toleration{
-				Key:      "kubernetes.azure.com/scalesetpriority",
-				Operator: v1.TolerationOpEqual,
-				Value:    "spot",
-				Effect:   v1.TaintEffectNoSchedule,
-			}),
+			Tolerations: append(podSpecTemplate.Spec.Tolerations,
+				v1.Toleration{
+					Key:      "sgx",
+					Operator: v1.TolerationOpEqual,
+					Value:    "enabled",
+					Effect:   v1.TaintEffectNoSchedule,
+				},
+			),
 			Containers: []v1.Container{
 				{
 					Name:            "generator",
 					Image:           podSpecTemplate.Spec.Container.Image,
 					ImagePullPolicy: podSpecTemplate.Spec.Container.ImagePullPolicy,
-					Resources:       podSpecTemplate.Spec.Container.Resources,
+					Resources: v1.ResourceRequirements{
+						Limits: v1.ResourceList{
+							"sgx.intel.com/enclave":  resource.MustParse("1"),
+							"sgx.intel.com/provision": resource.MustParse("1"),
+						},
+					},
 					Ports: []v1.ContainerPort{
 						{
 							ContainerPort: InterCRGNetworkingPort,
