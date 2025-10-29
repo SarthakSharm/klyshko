@@ -58,15 +58,13 @@ box_out() {
     local reset_color="\e[0m" # Reset to default
 
     local padding=2 # Padding around the text
-    local text_length=${#text}
-    local box_width=$((text_length + (2 * padding) + 2)) # Box width including borders
-
-    # Print text line with padding
-    printf "${box_color} "
+    #local text_length=${#text}
+    #local box_width=$((text_length + (2 * padding) + 2)) # Box width including borders
+    printf "%s " "${box_color}"
     printf "%.0s " $(seq 1 $padding)
     printf "${text_color}%s${reset_color}" "$text"
     printf "%.0s " $(seq 1 $padding)
-    printf " ${reset_color}\n"
+    printf "%s " "${reset_color}"
 }
 
 
@@ -84,7 +82,7 @@ box_out "[1] Spawning TEE.."
 
 gramine-sgx ./server "$mr_enclave" "$mr_signer" 0 0    &
 server_pid=$!
-./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER  &
+./KII "$mr_enclave" "$mr_signer" 0 0 "$KII_PLAYER_NUMBER"  &
 
 #./KII "$mr_enclave" "$mr_signer" 0 0 $KII_PLAYER_NUMBER &
 

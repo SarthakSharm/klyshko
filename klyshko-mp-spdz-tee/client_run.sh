@@ -3,20 +3,16 @@
 if [ -f "kii_0.log" ]; then
     rm "kii_0.log"
     echo "File removed successfully."
-else
-    # echo "File does not exist."
 fi
 
 if [ -f "kii_1.log" ]; then
     rm "kii_1.log"
     echo "File removed successfully."
-else
-    # echo "File does not exist."
 fi
 
 rm -r Player-Data
 mkdir Player-Data
-cd Player-Data
+cd Player-Data || exit
 mkdir 2-2-40
 mkdir 2-p-128
 cd ..

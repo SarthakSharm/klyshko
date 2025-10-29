@@ -47,7 +47,7 @@ type TupleGeneratorPodSpec struct {
 
 	// If specified, the pod's scheduling constraints
 	// +optional
-	Affinity *v1.Affinity `json:"affinity,omitempty"`
+	Affinity    *v1.Affinity        `json:"affinity,omitempty"`
 	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
 	// The specification of the TupleGenerator container
 	Container TupleGeneratorContainer `json:"container"`
