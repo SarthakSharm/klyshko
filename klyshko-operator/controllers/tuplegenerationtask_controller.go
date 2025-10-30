@@ -570,7 +570,7 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 					ImagePullPolicy: podSpecTemplate.Spec.Container.ImagePullPolicy,
 					Resources: v1.ResourceRequirements{
 						Limits: v1.ResourceList{
-							"sgx.intel.com/enclave":  resource.MustParse("1"),
+							"sgx.intel.com/enclave":   resource.MustParse("1"),
 							"sgx.intel.com/provision": resource.MustParse("1"),
 						},
 					},
@@ -636,7 +636,6 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 							Name:      "var-run-aesmd",
 							MountPath: "/var/run/aesmd",
 						},
-						
 					},
 				},
 			},
@@ -686,7 +685,6 @@ func (r *TupleGenerationTaskReconciler) createGeneratorPod(ctx context.Context, 
 						},
 					},
 				},
-				
 			},
 		},
 	}
