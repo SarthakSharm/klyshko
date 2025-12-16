@@ -206,15 +206,6 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
 
     mbedtls_printf(" ok\n");
 
-    // reset:
-    // #ifdef MBEDTLS_ERROR_C
-    //     if (ret != 0) {
-    //         char error_buf[100];
-    //         mbedtls_strerror(ret, error_buf, sizeof(error_buf));
-    //         mbedtls_printf("Last error was: %d - %s\n\n", ret, error_buf);
-    //     }
-    // #endif
-
     mbedtls_net_free(&client_fd);
 
     mbedtls_ssl_session_reset(&ssl);

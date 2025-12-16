@@ -15,7 +15,7 @@ file in the Carbyne Stack
   [abhilash.venkatesh@datakaveri.org](mailto:abhilash.venkatesh@datakaveri.org)
 - Rohith Vaidhyanathan 
   [rohith.vaidhyanathan@datakaveri.org](mailto:rohith.vaidhyanathan@datakaveri.org)
-- Sarthak Sharma 
+- Sarthak Sharma
   [sarthak.sharma@datakaveri.org](mailto:sarthak.sharma@datakaveri.org)
 - Srishti Mittal
   [srishti.mittal@datakaveri.org](mailto:srishti.mittal@datakaveri.org)

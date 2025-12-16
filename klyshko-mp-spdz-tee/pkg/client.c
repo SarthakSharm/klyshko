@@ -23,7 +23,7 @@ static void my_debug(void *ctx, int level, const char *file, int line, const cha
     fflush((FILE *)ctx);
 }
 
-//***$$$***
+
 static ssize_t file_read(const char *path, char *buf, size_t count)
 {
     FILE *f = fopen(path, "r");
@@ -44,7 +44,7 @@ static ssize_t file_read(const char *path, char *buf, size_t count)
 
     return bytes;
 }
-//***$$$***
+
 
 static int parse_hex(const char *hex, void *buffer, size_t buffer_size)
 {

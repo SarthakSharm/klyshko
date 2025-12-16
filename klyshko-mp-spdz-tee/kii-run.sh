@@ -17,19 +17,10 @@ fi
 # Configuration Variables
 export BASE_PORT="4433"
 
-# Run make with SGX and RA_TYPE as build variables
-# make app RA_TYPE=dcap
-
 # Retrieve mr_enclave and mr_signer values from server.sig
 output=$(gramine-sgx-sigstruct-view server.sig)
 mr_enclave=$(echo "$output" | grep "mr_enclave" | awk '{print $2}')
 mr_signer=$(echo "$output" | grep "mr_signer" | awk '{print $2}')
-
-# echo "mr_enclave: $mr_enclave, mr_signer: $mr_signer, i: $i"
-
-# output=$(gramine-sgx-sigstruct-view server.sig)
-# mr_enclave=$(echo "$output" | grep "mr_enclave" | awk '{print $2}')
-# mr_signer=$(echo "$output" | grep "mr_signer" | awk '{print $2}')
 
 # Check if mr_enclave and mr_signer are correctly retrieved
 if [ -z "$mr_enclave" ] || [ -z "$mr_signer" ]; then
