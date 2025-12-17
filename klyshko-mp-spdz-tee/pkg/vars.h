@@ -64,3 +64,4 @@ EXTERN char** kii_endpoints;
 EXTERN int base_port;
 
 #define KEY_LENGTH 128
+#define MAC_KEY_SIZE  KEY_LENGTH

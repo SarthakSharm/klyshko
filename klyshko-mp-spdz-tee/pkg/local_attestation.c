@@ -43,6 +43,7 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
     mbedtls_net_context client_fd;
     unsigned char buf[1024];
     const char *pers = "ssl_server";
+    const size_t pers_len = sizeof("ssl_server") - 1; // -1 to exclude null terminator
     char *error;
 
     void *ra_tls_attest_lib;
@@ -119,7 +120,7 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
     fflush(stdout);
 
     ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
-                                (const unsigned char *)pers, strlen(pers));
+                                (const unsigned char *)pers, pers_len);
     if (ret != 0)
     {
         mbedtls_printf(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
@@ -288,8 +289,20 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
     printf(" Step 3 Recieved the Mac shares from KII \n");
     // Player_MAC_Keys_p[player_number_defined] = message->mackeyshare_p;
     // Player_MAC_Keys_2[player_number_defined] = message->mackeyshare_2;
-    memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, KEY_LENGTH);
-    memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, KEY_LENGTH);
+    if (message->mackeyshare_p != NULL)
+    {
+        size_t len_p = strlen(message->mackeyshare_p);
+        size_t copy_len = (len_p < KEY_LENGTH) ? len_p : KEY_LENGTH - 1;
+        memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, copy_len);
+        Player_MAC_Keys_p[player_number_defined][copy_len] = '\0';
+    }
+    if (message->mackeyshare_2 != NULL)
+    {
+        size_t len_2 = strlen(message->mackeyshare_2);
+        size_t copy_len = (len_2 < KEY_LENGTH) ? len_2 : KEY_LENGTH - 1;
+        memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, copy_len);
+        Player_MAC_Keys_2[player_number_defined][copy_len] = '\0';
+    }
 
     // Free the unpacked message
     secret_share__free_unpacked(message, NULL);

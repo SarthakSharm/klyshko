@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "vars.h"
+#define MAC_KEY_SIZE KEY_LENGTH
 
 /* RA-TLS: on client, only need to register ra_tls_verify_callback_extended_der() for cert
  * verification. */
@@ -48,7 +49,18 @@ static ssize_t file_read(const char *path, char *buf, size_t count)
 
 static int parse_hex(const char *hex, void *buffer, size_t buffer_size)
 {
-    if (strlen(hex) != buffer_size * 2)
+    // Check for null termination within reasonable bounds to avoid over-read
+    size_t max_check = buffer_size * 2 + 1;
+    size_t hex_len = 0;
+    for (size_t i = 0; i < max_check; i++)
+    {
+        if (hex[i] == '\0')
+        {
+            hex_len = i;
+            break;
+        }
+    }
+    if (hex_len != buffer_size * 2)
         return -1;
 
     for (size_t i = 0; i < buffer_size; i++)
@@ -145,6 +157,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
     uint32_t flags;
     unsigned char buf[1024];
     const char *pers = "ssl_client1";
+    const size_t pers_len = sizeof("ssl_client1") - 1; // -1 to exclude null terminator
 
     char server_port[5];
     char server_ip[16];
@@ -318,7 +331,10 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
                 mbedtls_printf("Cannot parse ISV_PROD_ID!\n");
                 return 1;
             }
-            memcpy(g_expected_isv_prod_id, &isv_prod_id, sizeof(isv_prod_id));
+            if (sizeof(isv_prod_id) <= sizeof(g_expected_isv_prod_id))
+            {
+                memcpy(g_expected_isv_prod_id, &isv_prod_id, sizeof(isv_prod_id));
+            }
         }
 
         if (!strcmp(d, "0"))
@@ -335,7 +351,10 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
                 mbedtls_printf("Cannot parse ISV_SVN\n");
                 return 1;
             }
-            memcpy(g_expected_isv_svn, &isv_svn, sizeof(isv_svn));
+            if (sizeof(isv_svn) <= sizeof(g_expected_isv_svn))
+            {
+                memcpy(g_expected_isv_svn, &isv_svn, sizeof(isv_svn));
+            }
         }
     }
     else if (ra_tls_verify_lib)
@@ -357,7 +376,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         //  fflush(stdout);
 
         ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
-                                    (const unsigned char *)pers, strlen(pers));
+                                    (const unsigned char *)pers, pers_len);
         if (ret != 0)
         {
             mbedtls_printf(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
@@ -407,13 +426,16 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         //***$$$***
         char *ip_address = kii_endpoints[other_player_number];
         const char *colon_pos = strrchr(kii_endpoints[other_player_number], ':');
-        size_t ip_length = colon_pos - ip_address;
         if (colon_pos != NULL)
         {
-            strncpy(server_port, colon_pos + 1, 4); // Copy the last 4 characters (port)
-            strncpy(server_ip, ip_address, ip_length);
-            server_port[4] = '\0'; // Null-terminate the string
-            server_ip[ip_length] = '\0';
+            size_t ip_length = colon_pos - ip_address;
+            size_t port_len = strlen(colon_pos + 1);
+            size_t copy_port_len = (port_len < sizeof(server_port) - 1) ? port_len : sizeof(server_port) - 1;
+            size_t copy_ip_len = (ip_length < sizeof(server_ip) - 1) ? ip_length : sizeof(server_ip) - 1;
+            strncpy(server_port, colon_pos + 1, copy_port_len);
+            server_port[copy_port_len] = '\0'; // Null-terminate the string
+            strncpy(server_ip, ip_address, copy_ip_len);
+            server_ip[copy_ip_len] = '\0';
         }
         else
         {
@@ -560,7 +582,7 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
 
         fflush(stdout);
 
-        len = sprintf((char *)buf, GET_REQUEST);
+        len = snprintf((char *)buf, sizeof(buf), "%s", GET_REQUEST);
 
         PlayerInfo msg = PLAYER_INFO__INIT;
         msg.kii_job_id = kii_job_id_defined;       // Example initialization
@@ -686,10 +708,36 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         printf("Step 6: Sent  Mac and Seed Share to player number %d", other_player_number);
         // Perform operations
         // Seed = addHex(Seed, secret_message->seeds);
-        memcpy(Seed, addHex(Seed, secret_message->seeds), KEY_LENGTH);
+        char *new_seed = addHex(Seed, secret_message->seeds);
+        if (new_seed != NULL)
+        {
+            size_t seed_len = strlen(new_seed);
+            if (seed_len < KEY_LENGTH)
+            {
+                memcpy(Seed, new_seed, seed_len + 1); // +1 for null terminator
+            }
+            else
+            {
+                memcpy(Seed, new_seed, KEY_LENGTH - 1);
+                Seed[KEY_LENGTH - 1] = '\0';
+            }
+            free(new_seed);
+        }
         // printf("ADDED SEED IS : %s\n", Seed);
-        memcpy(Player_MAC_Keys_p[other_player_number], secret_message->mackeyshare_p, KEY_LENGTH);
-        memcpy(Player_MAC_Keys_2[other_player_number], secret_message->mackeyshare_2, KEY_LENGTH);
+        if (secret_message->mackeyshare_p != NULL)
+        {
+            size_t len_p = strlen(secret_message->mackeyshare_p);
+            size_t copy_len = (len_p < KEY_LENGTH) ? len_p : KEY_LENGTH - 1;
+            memcpy(Player_MAC_Keys_p[other_player_number], secret_message->mackeyshare_p, copy_len);
+            Player_MAC_Keys_p[other_player_number][copy_len] = '\0';
+        }
+        if (secret_message->mackeyshare_2 != NULL)
+        {
+            size_t len_2 = strlen(secret_message->mackeyshare_2);
+            size_t copy_len = (len_2 < KEY_LENGTH) ? len_2 : KEY_LENGTH - 1;
+            memcpy(Player_MAC_Keys_2[other_player_number], secret_message->mackeyshare_2, copy_len);
+            Player_MAC_Keys_2[other_player_number][copy_len] = '\0';
+        }
         // Free the unpacked message
         secret_share__free_unpacked(secret_message, NULL);
         while ((ret = mbedtls_ssl_close_notify(&ssl)) < 0)

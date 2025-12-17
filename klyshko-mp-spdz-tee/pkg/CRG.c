@@ -329,13 +329,19 @@ int main(int argc, char **argv)
     }
 
     char arg2[256] = {0};
-    if (strstr(arg2FormatByType[tuple_type], "%d") != NULL)
+    // Validate tuple_type is within bounds
+    if (tuple_type >= 0 && tuple_type < TUPLE_TYPE_COUNT)
     {
-        snprintf(arg2, sizeof(arg2), arg2FormatByType[tuple_type], atoi(n) / 3);
-    }
-    else
-    {
-        snprintf(arg2, sizeof(arg2), arg2FormatByType[tuple_type], n);
+        // Format strings are const and only contain safe specifiers (%s, %d)
+        const char *format_str = arg2FormatByType[tuple_type];
+        if (format_str != NULL && strstr(format_str, "%d") != NULL)
+        {
+            snprintf(arg2, sizeof(arg2), format_str, atoi(n) / 3);
+        }
+        else if (format_str != NULL)
+        {
+            snprintf(arg2, sizeof(arg2), format_str, n);
+        }
     }
 
     int player_count = atoi(number_of_players_str);
@@ -364,17 +370,39 @@ int main(int argc, char **argv)
 
     // Join cmd array into a single command string
     char cmdString[512] = {0}; // Buffer to hold the concatenated cmd
+    size_t cmdString_len = 0;
     for (int i = 0; i < length; ++i)
     {
         if (args[i] != NULL)
         {                               // Avoid null pointers
-            strcat(cmdString, args[i]); // Add the argument
-            strcat(cmdString, " ");     // Add a space between arguments
+            size_t arg_len = strlen(args[i]);
+            size_t remaining = sizeof(cmdString) - cmdString_len;
+            if (arg_len < remaining)
+            {
+                memcpy(cmdString + cmdString_len, args[i], arg_len);
+                cmdString_len += arg_len;
+                cmdString[cmdString_len] = '\0';
+            }
+            remaining = sizeof(cmdString) - cmdString_len;
+            if (remaining > 1)
+            {
+                cmdString[cmdString_len] = ' ';
+                cmdString_len += 1;
+                cmdString[cmdString_len] = '\0';
+            }
         }
     }
 
     char destination_path[1024] = {0};
-    snprintf(destination_path, sizeof(destination_path), tupleFileByType[tuple_type], number_of_players_str, player_number_str);
+    // Validate tuple_type is within bounds and format string is const (only contains safe %s specifiers)
+    if (tuple_type >= 0 && tuple_type < TUPLE_TYPE_COUNT)
+    {
+        const char *format_str = tupleFileByType[tuple_type];
+        if (format_str != NULL)
+        {
+            snprintf(destination_path, sizeof(destination_path), format_str, number_of_players_str, player_number_str);
+        }
+    }
 
     // Construct the full command with the copy operation
     char fullCommand[1024] = {0}; // Buffer for the full command

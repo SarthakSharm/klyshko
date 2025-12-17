@@ -36,7 +36,18 @@ static void my_debug(void *ctx, int level, const char *file, int line, const cha
 
 static int parse_hex(const char *hex, void *buffer, size_t buffer_size)
 {
-    if (strlen(hex) != buffer_size * 2)
+    // Check for null termination within reasonable bounds to avoid over-read
+    size_t max_check = buffer_size * 2 + 1;
+    size_t hex_len = 0;
+    for (size_t i = 0; i < max_check; i++)
+    {
+        if (hex[i] == '\0')
+        {
+            hex_len = i;
+            break;
+        }
+    }
+    if (hex_len != buffer_size * 2)
         return -1;
 
     for (size_t i = 0; i < buffer_size; i++)
@@ -150,6 +161,7 @@ int main(int argc, char **argv)
     uint32_t flags;
     unsigned char buf[1024];
     const char *pers = "ssl_client1";
+    const size_t pers_len = sizeof("ssl_client1") - 1; // -1 to exclude null terminator
 
     char *error;
     void *ra_tls_verify_lib = NULL;
@@ -271,7 +283,10 @@ int main(int argc, char **argv)
                 mbedtls_printf("Cannot parse ISV_PROD_ID!\n");
                 return 1;
             }
-            memcpy(g_expected_isv_prod_id, &isv_prod_id, sizeof(isv_prod_id));
+            if (sizeof(isv_prod_id) <= sizeof(g_expected_isv_prod_id))
+            {
+                memcpy(g_expected_isv_prod_id, &isv_prod_id, sizeof(isv_prod_id));
+            }
         }
 
         if (!strcmp(argv[4], "0"))
@@ -288,7 +303,10 @@ int main(int argc, char **argv)
                 mbedtls_printf("Cannot parse ISV_SVN\n");
                 return 1;
             }
-            memcpy(g_expected_isv_svn, &isv_svn, sizeof(isv_svn));
+            if (sizeof(isv_svn) <= sizeof(g_expected_isv_svn))
+            {
+                memcpy(g_expected_isv_svn, &isv_svn, sizeof(isv_svn));
+            }
         }
     }
     else if (ra_tls_verify_lib)
@@ -307,7 +325,7 @@ int main(int argc, char **argv)
     fflush(stdout);
 
     ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
-                                (const unsigned char *)pers, strlen(pers));
+                                (const unsigned char *)pers, pers_len);
     if (ret != 0)
     {
         mbedtls_printf(" failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret);
