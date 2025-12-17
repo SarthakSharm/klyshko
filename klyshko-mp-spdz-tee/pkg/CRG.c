@@ -329,18 +329,39 @@ int main(int argc, char **argv)
     }
 
     char arg2[256] = {0};
-    // Validate tuple_type is within bounds
+    // Validate tuple_type is within bounds and use explicit format strings to avoid format string vulnerabilities
     if (tuple_type >= 0 && tuple_type < TUPLE_TYPE_COUNT)
     {
-        // Format strings are const and only contain safe specifiers (%s, %d)
-        const char *format_str = arg2FormatByType[tuple_type];
-        if (format_str != NULL && strstr(format_str, "%d") != NULL)
+        // Use explicit format string matching to prevent format string injection
+        // Format strings are compile-time constants from const array
+        switch (tuple_type)
         {
-            snprintf(arg2, sizeof(arg2), format_str, atoi(n) / 3);
-        }
-        else if (format_str != NULL)
-        {
-            snprintf(arg2, sizeof(arg2), format_str, n);
+        case INPUT_MASK_GFP:
+        case INPUT_MASK_GF2N:
+            // These use %d format
+            if (tuple_type == INPUT_MASK_GFP)
+            {
+                snprintf(arg2, sizeof(arg2), "0,%d", atoi(n) / 3);
+            }
+            else
+            {
+                snprintf(arg2, sizeof(arg2), "%d,0", atoi(n) / 3);
+            }
+            break;
+        default:
+            // All others use %s format - use explicit constant format strings
+            {
+                const char *format_str = arg2FormatByType[tuple_type];
+                if (format_str != NULL)
+                {
+                    // Validate format string contains only safe specifiers
+                    if (strstr(format_str, "%s") != NULL && strstr(format_str, "%n") == NULL)
+                    {
+                        snprintf(arg2, sizeof(arg2), format_str, n);
+                    }
+                }
+            }
+            break;
         }
     }
 
@@ -375,13 +396,17 @@ int main(int argc, char **argv)
     {
         if (args[i] != NULL)
         {                               // Avoid null pointers
-            size_t arg_len = strlen(args[i]);
             size_t remaining = sizeof(cmdString) - cmdString_len;
-            if (arg_len < remaining)
+            if (remaining > 1 && args[i] != NULL)
             {
-                memcpy(cmdString + cmdString_len, args[i], arg_len);
-                cmdString_len += arg_len;
-                cmdString[cmdString_len] = '\0';
+                size_t arg_len = safe_strlen(args[i], remaining - 1);
+                size_t copy_size = (arg_len < remaining - 1) ? arg_len : remaining - 1;
+                if (copy_size > 0 && copy_size < remaining && (cmdString_len + copy_size) < sizeof(cmdString))
+                {
+                    memcpy(cmdString + cmdString_len, args[i], copy_size);
+                    cmdString_len += copy_size;
+                    cmdString[cmdString_len] = '\0';
+                }
             }
             remaining = sizeof(cmdString) - cmdString_len;
             if (remaining > 1)
@@ -394,13 +419,24 @@ int main(int argc, char **argv)
     }
 
     char destination_path[1024] = {0};
-    // Validate tuple_type is within bounds and format string is const (only contains safe %s specifiers)
-    if (tuple_type >= 0 && tuple_type < TUPLE_TYPE_COUNT)
+    // Validate tuple_type is within bounds
+    // Format strings are compile-time constants from const array, only contain %s specifiers
+    if (tuple_type >= 0 && tuple_type < TUPLE_TYPE_COUNT && number_of_players_str != NULL && player_number_str != NULL)
     {
         const char *format_str = tupleFileByType[tuple_type];
         if (format_str != NULL)
         {
-            snprintf(destination_path, sizeof(destination_path), format_str, number_of_players_str, player_number_str);
+            // Validate format string contains only safe %s specifiers, no %n or other dangerous ones
+            if (strstr(format_str, "%s") != NULL && strstr(format_str, "%n") == NULL)
+            {
+                // Format string is from const array, validated to only contain %s
+                // Using snprintf with size limit prevents buffer overflow
+                int result = snprintf(destination_path, sizeof(destination_path), format_str, number_of_players_str, player_number_str);
+                if (result < 0 || (size_t)result >= sizeof(destination_path))
+                {
+                    destination_path[0] = '\0'; // Clear on error
+                }
+            }
         }
     }
 

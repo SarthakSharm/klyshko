@@ -65,3 +65,17 @@ EXTERN int base_port;
 
 #define KEY_LENGTH 128
 #define MAC_KEY_SIZE  KEY_LENGTH
+
+// Helper function to safely get string length with bounds checking
+// Returns the length of the string up to max_len, or max_len if not null-terminated
+static inline size_t safe_strlen(const char *str, size_t max_len)
+{
+    if (str == NULL)
+        return 0;
+    for (size_t i = 0; i < max_len; i++)
+    {
+        if (str[i] == '\0')
+            return i;
+    }
+    return max_len; // Not null-terminated within bounds
+}

@@ -20,7 +20,6 @@ file in the Carbyne Stack
 - Srishti Mittal
   [srishti.mittal@datakaveri.org](mailto:srishti.mittal@datakaveri.org)
 
-
 ### Resolve.tech
 
 - Adrián Vaca Humanes [adrian.humanes@vml.com](mailto:adrian.humanes@vml.com)

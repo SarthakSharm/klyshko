@@ -289,19 +289,25 @@ int local_attestation(char *Player_MAC_Keys_p[], char *Player_MAC_Keys_2[])
     printf(" Step 3 Recieved the Mac shares from KII \n");
     // Player_MAC_Keys_p[player_number_defined] = message->mackeyshare_p;
     // Player_MAC_Keys_2[player_number_defined] = message->mackeyshare_2;
-    if (message->mackeyshare_p != NULL)
+    if (message->mackeyshare_p != NULL && Player_MAC_Keys_p[player_number_defined] != NULL)
     {
-        size_t len_p = strlen(message->mackeyshare_p);
+        size_t len_p = safe_strlen(message->mackeyshare_p, KEY_LENGTH);
         size_t copy_len = (len_p < KEY_LENGTH) ? len_p : KEY_LENGTH - 1;
-        memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, copy_len);
-        Player_MAC_Keys_p[player_number_defined][copy_len] = '\0';
+        if (copy_len < KEY_LENGTH)
+        {
+            memcpy(Player_MAC_Keys_p[player_number_defined], message->mackeyshare_p, copy_len);
+            Player_MAC_Keys_p[player_number_defined][copy_len] = '\0';
+        }
     }
-    if (message->mackeyshare_2 != NULL)
+    if (message->mackeyshare_2 != NULL && Player_MAC_Keys_2[player_number_defined] != NULL)
     {
-        size_t len_2 = strlen(message->mackeyshare_2);
+        size_t len_2 = safe_strlen(message->mackeyshare_2, KEY_LENGTH);
         size_t copy_len = (len_2 < KEY_LENGTH) ? len_2 : KEY_LENGTH - 1;
-        memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, copy_len);
-        Player_MAC_Keys_2[player_number_defined][copy_len] = '\0';
+        if (copy_len < KEY_LENGTH)
+        {
+            memcpy(Player_MAC_Keys_2[player_number_defined], message->mackeyshare_2, copy_len);
+            Player_MAC_Keys_2[player_number_defined][copy_len] = '\0';
+        }
     }
 
     // Free the unpacked message

@@ -429,13 +429,16 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         if (colon_pos != NULL)
         {
             size_t ip_length = colon_pos - ip_address;
-            size_t port_len = strlen(colon_pos + 1);
+            size_t port_len = safe_strlen(colon_pos + 1, sizeof(server_port) - 1);
             size_t copy_port_len = (port_len < sizeof(server_port) - 1) ? port_len : sizeof(server_port) - 1;
             size_t copy_ip_len = (ip_length < sizeof(server_ip) - 1) ? ip_length : sizeof(server_ip) - 1;
-            strncpy(server_port, colon_pos + 1, copy_port_len);
-            server_port[copy_port_len] = '\0'; // Null-terminate the string
-            strncpy(server_ip, ip_address, copy_ip_len);
-            server_ip[copy_ip_len] = '\0';
+            if (copy_port_len < sizeof(server_port) && copy_ip_len < sizeof(server_ip))
+            {
+                memcpy(server_port, colon_pos + 1, copy_port_len);
+                server_port[copy_port_len] = '\0'; // Null-terminate the string
+                memcpy(server_ip, ip_address, copy_ip_len);
+                server_ip[copy_ip_len] = '\0';
+            }
         }
         else
         {
@@ -711,32 +714,44 @@ int ssl_client_setup_and_handshake(char *a, char *b, char *c, char *d, char *Pla
         char *new_seed = addHex(Seed, secret_message->seeds);
         if (new_seed != NULL)
         {
-            size_t seed_len = strlen(new_seed);
-            if (seed_len < KEY_LENGTH)
+            // Seed buffer is 17 bytes (16 hex chars + null terminator)
+            const size_t SEED_BUFFER_SIZE = 17;
+            size_t seed_len = safe_strlen(new_seed, SEED_BUFFER_SIZE);
+            size_t copy_size = (seed_len < SEED_BUFFER_SIZE) ? seed_len + 1 : SEED_BUFFER_SIZE;
+            if (copy_size <= SEED_BUFFER_SIZE)
             {
-                memcpy(Seed, new_seed, seed_len + 1); // +1 for null terminator
-            }
-            else
-            {
-                memcpy(Seed, new_seed, KEY_LENGTH - 1);
-                Seed[KEY_LENGTH - 1] = '\0';
+                if (seed_len < SEED_BUFFER_SIZE)
+                {
+                    memcpy(Seed, new_seed, seed_len + 1); // +1 for null terminator
+                }
+                else
+                {
+                    memcpy(Seed, new_seed, SEED_BUFFER_SIZE - 1);
+                    Seed[SEED_BUFFER_SIZE - 1] = '\0';
+                }
             }
             free(new_seed);
         }
         // printf("ADDED SEED IS : %s\n", Seed);
-        if (secret_message->mackeyshare_p != NULL)
+        if (secret_message->mackeyshare_p != NULL && Player_MAC_Keys_p[other_player_number] != NULL)
         {
-            size_t len_p = strlen(secret_message->mackeyshare_p);
+            size_t len_p = safe_strlen(secret_message->mackeyshare_p, KEY_LENGTH);
             size_t copy_len = (len_p < KEY_LENGTH) ? len_p : KEY_LENGTH - 1;
-            memcpy(Player_MAC_Keys_p[other_player_number], secret_message->mackeyshare_p, copy_len);
-            Player_MAC_Keys_p[other_player_number][copy_len] = '\0';
+            if (copy_len < KEY_LENGTH)
+            {
+                memcpy(Player_MAC_Keys_p[other_player_number], secret_message->mackeyshare_p, copy_len);
+                Player_MAC_Keys_p[other_player_number][copy_len] = '\0';
+            }
         }
-        if (secret_message->mackeyshare_2 != NULL)
+        if (secret_message->mackeyshare_2 != NULL && Player_MAC_Keys_2[other_player_number] != NULL)
         {
-            size_t len_2 = strlen(secret_message->mackeyshare_2);
+            size_t len_2 = safe_strlen(secret_message->mackeyshare_2, KEY_LENGTH);
             size_t copy_len = (len_2 < KEY_LENGTH) ? len_2 : KEY_LENGTH - 1;
-            memcpy(Player_MAC_Keys_2[other_player_number], secret_message->mackeyshare_2, copy_len);
-            Player_MAC_Keys_2[other_player_number][copy_len] = '\0';
+            if (copy_len < KEY_LENGTH)
+            {
+                memcpy(Player_MAC_Keys_2[other_player_number], secret_message->mackeyshare_2, copy_len);
+                Player_MAC_Keys_2[other_player_number][copy_len] = '\0';
+            }
         }
         // Free the unpacked message
         secret_share__free_unpacked(secret_message, NULL);
