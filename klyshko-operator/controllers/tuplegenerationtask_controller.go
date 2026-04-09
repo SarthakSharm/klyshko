@@ -361,7 +361,7 @@ func (r *TupleGenerationTaskReconciler) getOrCreatePVC(ctx context.Context, key 
 			},
 			Resources: v1.ResourceRequirements{
 				Requests: v1.ResourceList{
-					"storage": resource.MustParse("100Mi"), // TODO Can this be computed from the number of tuples?
+					"storage": resource.MustParse("2Gi"), // TODO Can this be computed from the number of tuples?
 				},
 			},
 		},
