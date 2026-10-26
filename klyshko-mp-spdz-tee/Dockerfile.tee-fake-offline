@@ -6,7 +6,11 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 FROM gramineproject/gramine:1.7-jammy
-RUN apt update && apt install -y git make gcc  wget libsgx-dcap-ql libsgx-quote-ex libsgx-dcap-default-qpl pkg-config vim
+# Refresh CA certificates first: the base image's store does not trust the
+# certificate chain currently used by download.01.org (Intel SGX repository).
+RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates \
+    && apt-get update \
+    && apt-get install -y git make gcc wget libsgx-dcap-ql libsgx-quote-ex libsgx-dcap-default-qpl pkg-config vim
 ENV SGX_AESM_ADDR=1
 COPY azure_sgx_qcnl.conf /etc/sgx_default_qcnl.conf
 
