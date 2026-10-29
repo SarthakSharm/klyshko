@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.5.0](https://github.com/SarthakSharm/klyshko/compare/operator-v0.4.1...operator-v0.5.0) (2026-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **operator:** implement pod template support ([#86](https://github.com/SarthakSharm/klyshko/issues/86))
+* **operator/operator-chart/mp-spdz-cowgear:** add support for inter-CRG networking and CowGear CRG ([#65](https://github.com/SarthakSharm/klyshko/issues/65))
+* **operator/operator-chart:** add tuple generator CRG and support for tuple-type-specific thresholds and priorities ([#70](https://github.com/SarthakSharm/klyshko/issues/70))
+
+### Features
+
+* add SGX/Gramine TEE support for CRG ([#98](https://github.com/SarthakSharm/klyshko/issues/98)) ([12c1866](https://github.com/SarthakSharm/klyshko/commit/12c1866b0b935fa18bc2ed7d603a25bec798390e))
+* **mp-spdz/operator/operator-chart/provisioner:** initial commit for k8s operator based implementation ([b4da582](https://github.com/SarthakSharm/klyshko/commit/b4da58202091eefcea3782070587f094d9dabb83))
+* **operator/mp-spdz:** make number of tuples per job configurable via scheduler CRD ([#56](https://github.com/SarthakSharm/klyshko/issues/56)) ([90eb906](https://github.com/SarthakSharm/klyshko/commit/90eb906c3a9540db39b6072947e686801e1de68c))
+* **operator/operator-chart/mp-spdz-cowgear:** add support for inter-CRG networking and CowGear CRG ([#65](https://github.com/SarthakSharm/klyshko/issues/65)) ([e356440](https://github.com/SarthakSharm/klyshko/commit/e356440f8b9bd5a7452ae0b9476e101bfc6926bc))
+* **operator/operator-chart:** add tuple generator CRG and support for tuple-type-specific thresholds and priorities ([#70](https://github.com/SarthakSharm/klyshko/issues/70)) ([e216603](https://github.com/SarthakSharm/klyshko/commit/e2166031ed57fd9c982f0f8ed697f3dfa4d4aabd))
+* **operator:** implement pod template support ([#86](https://github.com/SarthakSharm/klyshko/issues/86)) ([c1ea1f4](https://github.com/SarthakSharm/klyshko/commit/c1ea1f47b1fab7a7220e919aa62d0acf67989670)), closes [#73](https://github.com/SarthakSharm/klyshko/issues/73)
+
+
+### Bug Fixes
+
+* **mp-spdz/operator-chart:** empty commit to trigger publication of artifacts ([#30](https://github.com/SarthakSharm/klyshko/issues/30)) ([f9beb81](https://github.com/SarthakSharm/klyshko/commit/f9beb81703fe8a14f568437cd29b7362381ae402))
+* **mp-spdz/operator-chart:** trigger workflows ([#37](https://github.com/SarthakSharm/klyshko/issues/37)) ([1a754c3](https://github.com/SarthakSharm/klyshko/commit/1a754c336d4cef441b1cbcaeb4820d034c38b90e))
+* **mp-spdz/operator-chart:** trigger workflows ([#41](https://github.com/SarthakSharm/klyshko/issues/41)) ([bf8b9b0](https://github.com/SarthakSharm/klyshko/commit/bf8b9b0a51d85473d6bf785dfd0efab608124ccc))
+* **mp-spdz:** trigger workflow ([5ab6139](https://github.com/SarthakSharm/klyshko/commit/5ab6139349bc6349045128edde210f7d337de47d))
+* **operator-chart:** remove legacy chart folder incl. migration of changelog updates ([cf5b0f6](https://github.com/SarthakSharm/klyshko/commit/cf5b0f67e6a3e5ca2a6525e4b65b511a976d8419))
+* **operator-chart:** rename chart to make publication workflow work ([#47](https://github.com/SarthakSharm/klyshko/issues/47)) ([b529207](https://github.com/SarthakSharm/klyshko/commit/b5292070fda11633f8b61b972dce4882a6e7bef1))
+* **operator-chart:** use quay.io mirror for kube-rbac-proxy (carbynestack[#123](https://github.com/SarthakSharm/klyshko/issues/123)) ([#104](https://github.com/SarthakSharm/klyshko/issues/104)) ([548da55](https://github.com/SarthakSharm/klyshko/commit/548da555998cd154869dc356adcbb94a1d579fdd))
+* **operator:** bump stale envtest pins and bypass setup-envtest download in CI ([#105](https://github.com/SarthakSharm/klyshko/issues/105)) ([b984259](https://github.com/SarthakSharm/klyshko/commit/b9842594aa8120ee91a4b924e7acc6965b984b31))
+* **operator:** enable processing of historical / missed etcd-backed roster updates ([#49](https://github.com/SarthakSharm/klyshko/issues/49)) ([cf5b0f6](https://github.com/SarthakSharm/klyshko/commit/cf5b0f67e6a3e5ca2a6525e4b65b511a976d8419)), closes [#15](https://github.com/SarthakSharm/klyshko/issues/15)
+* **operator:** get rid of unsupported trace logging level ([cf5b0f6](https://github.com/SarthakSharm/klyshko/commit/cf5b0f67e6a3e5ca2a6525e4b65b511a976d8419))
+* **operator:** pin setup-envtest version ([#94](https://github.com/SarthakSharm/klyshko/issues/94)) ([b46b543](https://github.com/SarthakSharm/klyshko/commit/b46b543b654917f8067050948caa42c1121410b7))
+* **operator:** prevent Tasks in terminal state from leaking PVCs ([#93](https://github.com/SarthakSharm/klyshko/issues/93)) ([6029adf](https://github.com/SarthakSharm/klyshko/commit/6029adf16f90a06a30dc55da452682315c7250ef))
+* **operator:** use numeric user and group ID in operator dockerfile ([cf5b0f6](https://github.com/SarthakSharm/klyshko/commit/cf5b0f67e6a3e5ca2a6525e4b65b511a976d8419))
+* **operator:** use retries to address race condition on etcd roster updates ([cf5b0f6](https://github.com/SarthakSharm/klyshko/commit/cf5b0f67e6a3e5ca2a6525e4b65b511a976d8419))
+
 ## [0.4.1](https://github.com/carbynestack/klyshko/compare/operator-v0.4.0...operator-v0.4.1) (2026-07-31)
 
 
