@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0](https://github.com/SarthakSharm/klyshko/compare/mp-spdz-v0.2.0...mp-spdz-v0.3.0) (2026-10-29)
+
+
+### Features
+
+* **mp-spdz/operator/operator-chart/provisioner:** initial commit for k8s operator based implementation ([b4da582](https://github.com/SarthakSharm/klyshko/commit/b4da58202091eefcea3782070587f094d9dabb83))
+* **operator/mp-spdz:** make number of tuples per job configurable via scheduler CRD ([#56](https://github.com/SarthakSharm/klyshko/issues/56)) ([90eb906](https://github.com/SarthakSharm/klyshko/commit/90eb906c3a9540db39b6072947e686801e1de68c))
+
+
+### Bug Fixes
+
+* **mp-spdz/operator-chart:** empty commit to trigger publication of artifacts ([#30](https://github.com/SarthakSharm/klyshko/issues/30)) ([f9beb81](https://github.com/SarthakSharm/klyshko/commit/f9beb81703fe8a14f568437cd29b7362381ae402))
+* **mp-spdz/operator-chart:** trigger workflows ([#37](https://github.com/SarthakSharm/klyshko/issues/37)) ([1a754c3](https://github.com/SarthakSharm/klyshko/commit/1a754c336d4cef441b1cbcaeb4820d034c38b90e))
+* **mp-spdz/operator-chart:** trigger workflows ([#41](https://github.com/SarthakSharm/klyshko/issues/41)) ([bf8b9b0](https://github.com/SarthakSharm/klyshko/commit/bf8b9b0a51d85473d6bf785dfd0efab608124ccc))
+* **mp-spdz:** trigger workflow ([5ab6139](https://github.com/SarthakSharm/klyshko/commit/5ab6139349bc6349045128edde210f7d337de47d))
+
 ## [0.2.0](https://github.com/carbynestack/klyshko/compare/mp-spdz-v0.1.4...mp-spdz-v0.2.0) (2023-03-22)
 
 
