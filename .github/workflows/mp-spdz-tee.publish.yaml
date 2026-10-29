@@ -53,7 +53,7 @@ jobs:
           fi
           echo "OBLIGATIONS_FOUND=${OBLIGATIONS_FOUND}" >> $GITHUB_OUTPUT
       - name: Update Release with license obligations resources
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         if: steps.license-obligations.outputs.OBLIGATIONS_FOUND == 'true'
         with:
           allowUpdates: true
@@ -64,18 +64,18 @@ jobs:
           omitNameDuringUpdate: true
 
       - name: Set up Docker buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55 # v2.10.0
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@7e8b541eb2e61bf99390e1afd4be13a184e9ebc5 # v3.10.1
       - name: Log in to container registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@818d4b7b91585d195f67373fd9cb0332e31a7175 # v4.6.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -89,7 +89,7 @@ jobs:
           printf '%s\n' "$AUTHOR_KEY_PEM" > "$RUNNER_TEMP/enclave-key.pem"
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@1104d471370f9806843c095c1db02b5a90c5f8b6 # v3.3.1
         with:
           context: ${{ env.WORKING_DIRECTORY }}
           file: ${{ env.WORKING_DIRECTORY }}/Dockerfile.tee-fake-offline
