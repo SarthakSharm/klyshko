@@ -85,15 +85,14 @@ jobs:
         run: |
           umask 077
           printf '%s\n' "$AUTHOR_KEY_PEM" > "$RUNNER_TEMP/enclave-key.pem"
-      - name: Build and push Docker image
+      - name: Build and push Docker image (by digest, no tags yet)
         id: build-and-push
         uses: docker/build-push-action@v3
         with:
           context: ${{ env.WORKING_DIRECTORY }}
           file: ${{ env.WORKING_DIRECTORY }}/Dockerfile.tee-fake-offline
-          push: true
           no-cache: true            # never reuse layers signed with a CI throwaway key
-          tags: ${{ steps.meta.outputs.tags }}
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=${{ steps.meta.outputs.version }}
@@ -135,11 +134,37 @@ jobs:
         run: |
           cosign attest --yes --type "$PREDICATE_TYPE" --predicate predicate.json \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+      - name: Install crane (official release, checksum-pinned)
+        env:
+          CRANE_VERSION: v0.22.1
+          CRANE_SHA256: 0ab7a1d6932a213aed964ce97666c3077fe691c8606413674a8b3e0b9ec4cda0
+        run: |
+          set -euo pipefail
+          curl -sSfL -o "$RUNNER_TEMP/ggcr.tgz" \
+            "https://github.com/google/go-containerregistry/releases/download/${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz"
+          echo "${CRANE_SHA256}  $RUNNER_TEMP/ggcr.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/ggcr.tgz" -C "$RUNNER_TEMP" crane
+          sudo install -m 0755 "$RUNNER_TEMP/crane" /usr/local/bin/crane
+          crane version
+      - name: Tag the verified and signed image
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: |
+          set -euo pipefail
+          for ref in $TAGS; do
+            repo="${ref%:*}"; tag="${ref##*:}"
+            crane tag "${repo}@${DIGEST}" "$tag"
+            [ "$(crane digest "$ref")" = "$DIGEST" ] \
+              || { echo "::error::$ref does not point at $DIGEST"; exit 1; }
+            echo "Tagged $ref -> $DIGEST"
+          done
 
       - name: Write job summary
         run: |
           {
             echo "### Published ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
             echo "Digest: \`${{ steps.build-and-push.outputs.digest }}\`"
+            echo "Tags: $(echo '${{ steps.meta.outputs.tags }}' | tr '\n' ' ')"
             echo '```json'; cat predicate.json; echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
